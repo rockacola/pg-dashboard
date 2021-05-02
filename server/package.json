@@ -6,8 +6,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "NODE_ENV=production nodemon -r dotenv/config ./src/app.js dotenv_config_path=.env.production",
-    "debug": "nodemon -r dotenv/config ./src/app.js dotenv_config_path=.env.development",
+    "start": "NODE_ENV=production nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.production",
+    "debug": "nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.development",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write './src/**/*.js'"
   },
