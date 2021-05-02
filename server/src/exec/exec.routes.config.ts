@@ -9,7 +9,7 @@ export class ExecRoutes extends CommonRoutesConfig {
 
   configureRoutes() {
     this.app.route('/check-connection').get(ExecController.checkConnection)
-    this.app.route('/query').post(ExecController.query)
+    this.app.route('/query').get(ExecController.query)
 
     return this.app
   }

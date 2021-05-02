@@ -5,3 +5,7 @@ export interface ConnectExecDto {
   port: number
   defaultDatabase: string
 }
+
+export interface QueryExecDto extends ConnectExecDto {
+  query: string
+}
