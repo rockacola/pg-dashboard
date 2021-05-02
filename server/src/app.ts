@@ -5,7 +5,7 @@ import expressWinston from 'express-winston'
 import http from 'http'
 import winston from 'winston'
 import { CommonRoutesConfig } from './common/common.routes.config'
-import { UsersRoutes } from './exec/exec.routes.config'
+import { ExecRoutes } from './exec/exec.routes.config'
 
 const app: express.Application = express()
 const server: http.Server = http.createServer(app)
@@ -36,10 +36,10 @@ if (process.env.DEBUG) {
 
 app.use(expressWinston.logger(loggerOptions))
 
-routes.push(new UsersRoutes(app))
+routes.push(new ExecRoutes(app))
 
 app.get('/', (req: express.Request, res: express.Response) => {
-  res.status(200).send('server up')
+  res.json({ 'message:': 'ok' })
 })
 
 server.listen(port, () => {
