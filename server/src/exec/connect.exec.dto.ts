@@ -1,6 +1,6 @@
 export interface ConnectExecDto {
   host: string
-  username: string
+  user: string
   password: string
   port: number
   defaultDatabase: string
