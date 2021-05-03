@@ -1,4 +1,10 @@
 import LoginTextInput from '../partials/login-input-field'
+import {
+  DatabaseIcon,
+  InboxIcon,
+  LocationMarkerIcon,
+  UserIcon,
+} from '@heroicons/react/outline'
 
 function Login() {
   return (
@@ -21,16 +27,19 @@ function Login() {
                 inputFor="host"
                 label="Host"
                 inputPlaceholder="127.0.0.1"
+                icon={<LocationMarkerIcon />}
               />
               <LoginTextInput
-                inputFor="post"
+                inputFor="port"
                 label="Port"
                 inputPlaceholder="5432"
+                icon={<InboxIcon />}
               />
               <LoginTextInput
                 inputFor="user"
                 label="User"
                 inputPlaceholder="root"
+                icon={<UserIcon />}
               />
               <LoginTextInput
                 inputFor="password"
@@ -41,6 +50,7 @@ function Login() {
                 inputFor="database"
                 label="Database"
                 inputPlaceholder="default"
+                icon={<DatabaseIcon />}
               />
 
               <div className="flex w-full mt-8">
