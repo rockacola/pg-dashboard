@@ -9,8 +9,11 @@ import {
 import { useEffect, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
+import { useDispatch } from 'react-redux'
+import { update } from '../reducers/connection-slice'
 
 function Login() {
+  const dispatch = useDispatch()
   const [host, setHost] = useState('')
   const [port, setPort] = useState('')
   const [username, setUsername] = useState('')
@@ -55,6 +58,9 @@ function Login() {
     console.log('res:', res)
 
     if (!!res && !!res.isSuccess) {
+      const allConnections = [{ host, port, username, password, database }]
+      dispatch(update(allConnections))
+
       // TODO: redirect user to 'dashboard' along with URL params
     } else {
       // TODO: display error message

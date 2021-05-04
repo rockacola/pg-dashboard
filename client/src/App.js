@@ -3,19 +3,23 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import Dashboard from './views/Dashboard'
 // import Home from './views/Home'
 import Login from './views/Login'
+import { Provider } from 'react-redux'
+import store from './store'
 
 function App() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/">
-          <Login />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/">
+            <Login />
+          </Route>
+          <Route path="/dashboard">
+            <Dashboard />
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    </Provider>
   )
 }
 
