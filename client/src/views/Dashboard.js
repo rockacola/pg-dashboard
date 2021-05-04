@@ -1,10 +1,12 @@
 import { LogoutIcon, TableIcon } from '@heroicons/react/outline'
+import DashboardButton from '../partials/dashboard-button'
 import DashboardNavItem from '../partials/dashboard-nav-item'
+import DashboardTabItem from '../partials/dashboard-tab-item'
 
 function Dashboard() {
   return (
     <div className="h-screen w-full flex overflow-hidden">
-      <nav className="flex flex-col bg-gray-200 dark:bg-gray-900 w-64 px-12 pt-4 pb-6">
+      <nav className="flex flex-col bg-gray-200 w-64 px-12 pt-4 pb-6">
         <div className="flex flex-row border-b items-center justify-between pb-2">
           <span className="text-lg font-semibold capitalize dark:text-gray-300">
             Dashboard
@@ -22,49 +24,34 @@ function Dashboard() {
         className="flex-1 flex flex-col bg-gray-100 dark:bg-gray-700 transition
       duration-500 ease-in-out overflow-y-auto"
       >
-        <div className="mx-10 my-2">
-          <nav
-            className="flex flex-row justify-between border-b
-          dark:border-gray-600 dark:text-gray-400 transition duration-500
-          ease-in-out"
-          >
+        <div className="max-w-4xl mx-10 my-2">
+          <div>
             <div className="flex">
-              <a
-                href="users-dashboard/"
-                className="py-2 block text-green-500 border-green-500
-              dark:text-green-200 dark:border-green-200
-              focus:outline-none border-b-2 font-medium capitalize
-              transition duration-500 ease-in-out"
-              >
-                Lorem
-              </a>
-              <button
-                className="ml-6 py-2 block border-b-2 border-transparent
-              focus:outline-none font-medium capitalize text-center
-              focus:text-green-500 focus:border-green-500
-              dark-focus:text-green-200 dark-focus:border-green-200
-              transition duration-500 ease-in-out"
-              >
-                Ipsum
-              </button>
-              <button
-                className="ml-6 py-2 block border-b-2 border-transparent
-              focus:outline-none font-medium capitalize text-center
-              focus:text-green-500 focus:border-green-500
-              dark-focus:text-green-200 dark-focus:border-green-200
-              transition duration-500 ease-in-out"
-              >
-                Dolor
-              </button>
+              <DashboardTabItem label="Query Editor" isActive={true} />
+              <DashboardTabItem label="Query History" isActive={false} />
             </div>
-          </nav>
-          <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
-            Subheading
-          </h2>
-          <div
-            className="pb-2 flex items-center justify-between text-gray-600
-          dark:text-gray-400 border-b dark:border-gray-600"
-          >
+            <form className="mt-2">
+              <textarea className="container border rounded-lg h-40 p-4">
+                SELECT * FROM tblCusotmers WHERE tblCusotmers.id > 100 LIMIT 10;
+              </textarea>
+              <div className="text-blue-700 text-right -mx-2 mt-2">
+                <DashboardButton type="reset" value="Reset" />
+                <DashboardButton type="submit" value="Run" />
+              </div>
+            </form>
+          </div>
+
+          <div>
+            <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
+              Query Results
+            </h2>
+            <div className="flex">
+              <DashboardTabItem label="Lorem" isActive={true} />
+              <DashboardTabItem label="Ipsum" isActive={false} />
+              <DashboardTabItem label="Dolor" isActive={false} />
+            </div>
+          </div>
+          <div className="mt-4 pb-2 flex items-center justify-between text-gray-600">
             Lorem ipsum doloar sit atem.
           </div>
         </div>
