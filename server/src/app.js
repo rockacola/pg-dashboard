@@ -18,6 +18,9 @@ const loggerOptions = {
     winston.format.colorize({ all: true })
   ),
 }
+if (!process.env.DEBUG) {
+  loggerOptions.meta = false
+}
 
 app.use(expressWinston.logger(loggerOptions))
 

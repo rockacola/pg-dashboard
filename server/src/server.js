@@ -9,8 +9,6 @@ if (process.env.DEBUG) {
     log('Unhandled rejection. reason:', reason)
     process.exit(1)
   })
-} else {
-  loggerOptions.meta = false
 }
 
 server.listen(port, () => {
