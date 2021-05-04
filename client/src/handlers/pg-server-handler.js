@@ -12,13 +12,13 @@ export class PgServerHandler {
    * @param {string} db
    * @returns {Promise<object>}
    */
-  static async checkConnection(host, port, user, pass, db) {
+  static async checkConnection({ host, port, username, password, database }) {
     const params = {
       host,
       port,
-      user,
-      pass,
-      db,
+      user: username,
+      pass: password,
+      db: database,
     }
     const url = qs.stringifyUrl({
       url: SERVER_BASE_URL + '/check-connection',

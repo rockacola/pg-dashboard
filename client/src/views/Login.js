@@ -11,6 +11,7 @@ import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
 import { useDispatch } from 'react-redux'
 import { update } from '../reducers/connection-slice'
+import { HashHelper } from '../helpers/hash-helper'
 
 function Login() {
   const dispatch = useDispatch()
@@ -48,18 +49,19 @@ function Login() {
   const checkConnection = async () => {
     console.log('checkConnection triggered.')
 
-    const res = await PgServerHandler.checkConnection(
-      host,
-      port,
-      username,
-      password,
-      database
-    )
+    const connectionObj = { host, port, username, password, database }
+    const res = await PgServerHandler.checkConnection(connectionObj)
     console.log('res:', res)
 
     if (!!res && !!res.isSuccess) {
-      const allConnections = [{ host, port, username, password, database }]
-      dispatch(update(allConnections))
+      const hashKey = HashHelper.getHashByObject(connectionObj)
+      console.log('hashKey:', hashKey)
+      dispatch(
+        update({
+          key: hashKey,
+          value: connectionObj,
+        })
+      )
 
       // TODO: redirect user to 'dashboard' along with URL params
     } else {

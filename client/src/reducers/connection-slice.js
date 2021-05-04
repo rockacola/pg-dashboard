@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const connectionSlice = createSlice({
   name: 'connection',
   initialState: {
-    value: [],
+    connections: {},
   },
   reducers: {
     /**
@@ -13,7 +13,10 @@ export const connectionSlice = createSlice({
       console.log('connectionSlice.update triggered.')
       console.log('action:', action)
 
-      state.value = action.payload.value
+      const key = action.payload.key
+      const value = action.payload.value
+
+      state.connections[key] = value
     },
   },
 })
