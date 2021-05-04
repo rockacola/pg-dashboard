@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { update } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
+import Spinner from '../partials/spinner'
 
 function Login() {
   const history = useHistory()
@@ -83,10 +84,8 @@ function Login() {
   }
 
   useEffect(() => {
-    console.log('useEffect ON MOUNT.')
-
     const urlParams = qs.parse(location.search)
-    console.log('urlParams:', urlParams)
+    // console.log('urlParams:', urlParams)
 
     if (urlParams.host) {
       setHost(urlParams.host)
@@ -112,7 +111,11 @@ function Login() {
     return 'Credentials'
   }, [isLoading])
 
-  const renderLoading = () => <div>LOADING...</div>
+  const renderLoading = () => (
+    <div className="flex justify-center mt-8">
+      <Spinner size={16} />
+    </div>
+  )
 
   const renderForm = () => (
     <div className="mt-10">
