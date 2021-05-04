@@ -6,8 +6,9 @@ import {
   LocationMarkerIcon,
   UserIcon,
 } from '@heroicons/react/outline'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
+import qs from 'query-string'
 
 function Login() {
   const [host, setHost] = useState('')
@@ -52,6 +53,12 @@ function Login() {
       database
     )
     console.log('res:', res)
+
+    if (!!res && !!res.isSuccess) {
+      // TODO: redirect user to 'dashboard' along with URL params
+    } else {
+      // TODO: display error message
+    }
   }
 
   const onSubmitHandler = (e) => {
@@ -59,6 +66,29 @@ function Login() {
     console.log('onSubmitHandler triggered. e:', e)
     checkConnection()
   }
+
+  useEffect(() => {
+    console.log('useEffect ON MOUNT.')
+
+    const urlParams = qs.parse(window.location.search)
+    console.log('urlParams:', urlParams)
+
+    if (urlParams.host) {
+      setHost(urlParams.host)
+    }
+    if (urlParams.port) {
+      setPort(urlParams.port)
+    }
+    if (urlParams.user) {
+      setUsername(urlParams.user)
+    }
+    if (urlParams.pass) {
+      setPassword(urlParams.pass)
+    }
+    if (urlParams.db) {
+      setDatabase(urlParams.db)
+    }
+  }, [])
 
   return (
     <div className="view--login bg-red-300">
