@@ -13,6 +13,7 @@ function Dashboard() {
   const location = useLocation()
   const dispatch = useDispatch()
   const [query, setQuery] = useState('')
+  const [resultObject, setResultObject] = useState(undefined)
   const allConnections = useSelector((state) => state.connection.connections)
   console.log('allConnections:', allConnections)
 
@@ -31,6 +32,8 @@ function Dashboard() {
     }
     const res = await PgServerHandler.query(params)
     console.log('res:', res)
+
+    setResultObject(res.data)
   }
 
   const onQueryChangeHandler = (e) => {
@@ -47,6 +50,19 @@ function Dashboard() {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
     performQuery()
+  }
+
+  const renderResult = () => {
+    if (!resultObject) {
+      return null
+    }
+    return (
+      <div className="bg-gray-50 p-2 text-xs text-gray-600">
+        <pre>
+          <code>{JSON.stringify(resultObject, null, 2)}</code>
+        </pre>
+      </div>
+    )
   }
 
   return (
@@ -105,6 +121,7 @@ function Dashboard() {
           <div className="mt-4 pb-2 flex items-center justify-between text-gray-600">
             Lorem ipsum doloar sit atem.
           </div>
+          {renderResult()}
         </div>
       </main>
     </div>
