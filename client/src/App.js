@@ -11,11 +11,11 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
-          <Route path="/">
-            <Login />
-          </Route>
           <Route path="/dashboard">
             <Dashboard />
+          </Route>
+          <Route path="/" exact>
+            <Login />
           </Route>
         </Switch>
       </BrowserRouter>

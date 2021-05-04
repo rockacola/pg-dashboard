@@ -6,20 +6,24 @@ import {
   LocationMarkerIcon,
   UserIcon,
 } from '@heroicons/react/outline'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
 import { useDispatch } from 'react-redux'
 import { update } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
+import { useHistory, useLocation } from 'react-router-dom'
 
 function Login() {
+  const history = useHistory()
+  const location = useLocation()
   const dispatch = useDispatch()
   const [host, setHost] = useState('')
   const [port, setPort] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [database, setDatabase] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const onInputChangeHandler = (e) => {
     // console.log('onInputChangeHandler triggered. e:', e)
@@ -49,6 +53,7 @@ function Login() {
   const checkConnection = async () => {
     console.log('checkConnection triggered.')
 
+    setIsLoading(true)
     const connectionObj = { host, port, username, password, database }
     const res = await PgServerHandler.checkConnection(connectionObj)
     console.log('res:', res)
@@ -63,9 +68,11 @@ function Login() {
         })
       )
 
-      // TODO: redirect user to 'dashboard' along with URL params
+      // Redirect user to 'dashboard' along with current connection
+      history.push(`/dashboard?c=${hashKey}`)
     } else {
       // TODO: display error message
+      setIsLoading(false)
     }
   }
 
@@ -78,7 +85,7 @@ function Login() {
   useEffect(() => {
     console.log('useEffect ON MOUNT.')
 
-    const urlParams = qs.parse(window.location.search)
+    const urlParams = qs.parse(location.search)
     console.log('urlParams:', urlParams)
 
     if (urlParams.host) {
@@ -96,7 +103,72 @@ function Login() {
     if (urlParams.db) {
       setDatabase(urlParams.db)
     }
-  }, [])
+  }, [location])
+
+  const subcaption = useMemo(() => {
+    if (isLoading) {
+      return 'Connecting...'
+    }
+    return 'Credentials'
+  }, [isLoading])
+
+  const renderLoading = () => <div>LOADING...</div>
+
+  const renderForm = () => (
+    <div className="mt-10">
+      <form onSubmit={onSubmitHandler}>
+        <LoginTextInput
+          inputFor="host"
+          label="Host"
+          value={host}
+          onChange={onInputChangeHandler}
+          inputPlaceholder="127.0.0.1"
+          icon={<LocationMarkerIcon />}
+        />
+        <LoginTextInput
+          inputFor="port"
+          label="Port"
+          value={port}
+          onChange={onInputChangeHandler}
+          inputPlaceholder="5432"
+          icon={<InboxIcon />}
+        />
+        <LoginTextInput
+          inputFor="user"
+          label="User"
+          value={username}
+          onChange={onInputChangeHandler}
+          inputPlaceholder="root"
+          icon={<UserIcon />}
+        />
+        <LoginTextInput
+          inputFor="password"
+          inputType="password"
+          label="Password"
+          value={password}
+          onChange={onInputChangeHandler}
+        />
+        <LoginTextInput
+          inputFor="database"
+          label="Database"
+          value={database}
+          onChange={onInputChangeHandler}
+          inputPlaceholder="default"
+          icon={<DatabaseIcon />}
+        />
+
+        <div className="flex w-full mt-8">
+          <button
+            type="submit"
+            className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
+          >
+            <span className="mr-2 uppercase">Test Connect</span>
+            <span className="w-4 h-4">{<ArrowCircleRightIcon />}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  )
 
   return (
     <div className="view--login bg-red-300">
@@ -108,63 +180,12 @@ function Login() {
           <div className="relative mt-10 h-px bg-gray-300">
             <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
               <span className="bg-white px-4 text-xs text-gray-500 uppercase">
-                Credentials
+                {subcaption}
               </span>
             </div>
           </div>
-          <div className="mt-10">
-            <form onSubmit={onSubmitHandler}>
-              <LoginTextInput
-                inputFor="host"
-                label="Host"
-                value={host}
-                onChange={onInputChangeHandler}
-                inputPlaceholder="127.0.0.1"
-                icon={<LocationMarkerIcon />}
-              />
-              <LoginTextInput
-                inputFor="port"
-                label="Port"
-                value={port}
-                onChange={onInputChangeHandler}
-                inputPlaceholder="5432"
-                icon={<InboxIcon />}
-              />
-              <LoginTextInput
-                inputFor="user"
-                label="User"
-                value={username}
-                onChange={onInputChangeHandler}
-                inputPlaceholder="root"
-                icon={<UserIcon />}
-              />
-              <LoginTextInput
-                inputFor="password"
-                inputType="password"
-                label="Password"
-                value={password}
-                onChange={onInputChangeHandler}
-              />
-              <LoginTextInput
-                inputFor="database"
-                label="Database"
-                value={database}
-                onChange={onInputChangeHandler}
-                inputPlaceholder="default"
-                icon={<DatabaseIcon />}
-              />
-
-              <div className="flex w-full mt-8">
-                <button
-                  type="submit"
-                  className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
-                >
-                  <span className="mr-2 uppercase">Test Connect</span>
-                  <span className="w-4 h-4">{<ArrowCircleRightIcon />}</span>
-                </button>
-              </div>
-            </form>
-          </div>
+          {isLoading && renderLoading()}
+          {!isLoading && renderForm()}
         </div>
       </div>
     </div>
