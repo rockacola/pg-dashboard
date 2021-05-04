@@ -1,12 +1,65 @@
 import LoginTextInput from '../partials/login-input-field'
 import {
+  ArrowCircleRightIcon,
   DatabaseIcon,
   InboxIcon,
   LocationMarkerIcon,
   UserIcon,
 } from '@heroicons/react/outline'
+import { useState } from 'react'
+import { PgServerHandler } from '../handlers/pg-server-handler'
 
 function Login() {
+  const [host, setHost] = useState('')
+  const [port, setPort] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [database, setDatabase] = useState('')
+
+  const onInputChangeHandler = (e) => {
+    // console.log('onInputChangeHandler triggered. e:', e)
+
+    switch (e.target.name) {
+      case 'host':
+        setHost(e.target.value)
+        break
+      case 'port':
+        setPort(e.target.value)
+        break
+      case 'user':
+        setUsername(e.target.value)
+        break
+      case 'password':
+        setPassword(e.target.value)
+        break
+      case 'database':
+        setDatabase(e.target.value)
+        break
+
+      default:
+        break
+    }
+  }
+
+  const checkConnection = async () => {
+    console.log('checkConnection triggered.')
+
+    const res = await PgServerHandler.checkConnection(
+      host,
+      port,
+      username,
+      password,
+      database
+    )
+    console.log('res:', res)
+  }
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault()
+    console.log('onSubmitHandler triggered. e:', e)
+    checkConnection()
+  }
+
   return (
     <div className="view--login bg-red-300">
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300">
@@ -22,22 +75,28 @@ function Login() {
             </div>
           </div>
           <div className="mt-10">
-            <form action="#">
+            <form onSubmit={onSubmitHandler}>
               <LoginTextInput
                 inputFor="host"
                 label="Host"
+                value={host}
+                onChange={onInputChangeHandler}
                 inputPlaceholder="127.0.0.1"
                 icon={<LocationMarkerIcon />}
               />
               <LoginTextInput
                 inputFor="port"
                 label="Port"
+                value={port}
+                onChange={onInputChangeHandler}
                 inputPlaceholder="5432"
                 icon={<InboxIcon />}
               />
               <LoginTextInput
                 inputFor="user"
                 label="User"
+                value={username}
+                onChange={onInputChangeHandler}
                 inputPlaceholder="root"
                 icon={<UserIcon />}
               />
@@ -45,10 +104,14 @@ function Login() {
                 inputFor="password"
                 inputType="password"
                 label="Password"
+                value={password}
+                onChange={onInputChangeHandler}
               />
               <LoginTextInput
                 inputFor="database"
                 label="Database"
+                value={database}
+                onChange={onInputChangeHandler}
                 inputPlaceholder="default"
                 icon={<DatabaseIcon />}
               />
@@ -59,19 +122,7 @@ function Login() {
                   className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
                 >
                   <span className="mr-2 uppercase">Test Connect</span>
-                  <span>
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </span>
+                  <span className="w-4 h-4">{<ArrowCircleRightIcon />}</span>
                 </button>
               </div>
             </form>

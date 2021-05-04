@@ -4,13 +4,15 @@ function LoginTextInput({
   inputFor,
   inputType = 'text',
   label,
+  value,
   inputPlaceholder = '',
   icon = <BeakerIcon />,
+  onChange,
 }) {
   return (
     <div className="flex flex-col mb-3">
       <label
-        for={inputFor}
+        htmlFor={inputFor}
         className="mb-1 text-xs sm:text-sm tracking-wide text-gray-600"
       >
         {label}
@@ -26,6 +28,8 @@ function LoginTextInput({
           name={inputFor}
           className="text-sm sm:text-base placeholder-gray-500 pl-10 pr-4 rounded-lg border border-gray-400 w-full py-2 focus:outline-none focus:border-blue-400"
           placeholder={inputPlaceholder}
+          value={value}
+          onChange={onChange}
         />
       </div>
     </div>
