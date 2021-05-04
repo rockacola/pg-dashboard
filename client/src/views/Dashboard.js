@@ -1,9 +1,54 @@
 import { LogoutIcon, TableIcon } from '@heroicons/react/outline'
+import { useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router'
+import { PgServerHandler } from '../handlers/pg-server-handler'
 import DashboardButton from '../partials/dashboard-button'
 import DashboardNavItem from '../partials/dashboard-nav-item'
 import DashboardTabItem from '../partials/dashboard-tab-item'
+import qs from 'query-string'
 
 function Dashboard() {
+  const history = useHistory()
+  const location = useLocation()
+  const dispatch = useDispatch()
+  const [query, setQuery] = useState('')
+  const allConnections = useSelector((state) => state.connection.connections)
+  console.log('allConnections:', allConnections)
+
+  const connectionHashKey = useMemo(() => {
+    const urlParams = qs.parse(location.search)
+    return urlParams.c
+  }, [location])
+
+  const performQuery = async () => {
+    const targetConnection = allConnections[connectionHashKey]
+
+    // TODO: show spinner
+    const params = {
+      ...targetConnection,
+      query,
+    }
+    const res = await PgServerHandler.query(params)
+    console.log('res:', res)
+  }
+
+  const onQueryChangeHandler = (e) => {
+    // console.log('onQueryChange triggered. e:', e);
+    setQuery(e.target.value)
+  }
+
+  const onResetClickHandler = (e) => {
+    console.log('onResetClickHandler triggered. e:', e)
+    setQuery('')
+  }
+
+  const onSubmitHandler = (e) => {
+    e.preventDefault()
+    console.log('onSubmitHandler triggered. e:', e)
+    performQuery()
+  }
+
   return (
     <div className="h-screen w-full flex overflow-hidden">
       <nav className="flex flex-col bg-gray-200 w-64 px-12 pt-4 pb-6">
@@ -30,12 +75,18 @@ function Dashboard() {
               <DashboardTabItem label="Query Editor" isActive={true} />
               <DashboardTabItem label="Query History" isActive={false} />
             </div>
-            <form className="mt-2">
-              <textarea className="container border rounded-lg h-40 p-4">
-                SELECT * FROM tblCusotmers WHERE tblCusotmers.id > 100 LIMIT 10;
-              </textarea>
+            <form className="mt-2" onSubmit={onSubmitHandler}>
+              <textarea
+                className="container border rounded-lg h-40 p-4"
+                onChange={onQueryChangeHandler}
+                value={query}
+              />
               <div className="text-blue-700 text-right -mx-2 mt-2">
-                <DashboardButton type="reset" value="Reset" />
+                <DashboardButton
+                  type="reset"
+                  value="Reset"
+                  onClick={onResetClickHandler}
+                />
                 <DashboardButton type="submit" value="Run" />
               </div>
             </form>

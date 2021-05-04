@@ -27,4 +27,21 @@ export class PgServerHandler {
     const res = await axios.get(url)
     return res.data
   }
+
+  static async query({ host, port, username, password, database, query }) {
+    const params = {
+      host,
+      port,
+      user: username,
+      pass: password,
+      db: database,
+      q: query,
+    }
+    const url = qs.stringifyUrl({
+      url: SERVER_BASE_URL + '/query',
+      query: params,
+    })
+    const res = await axios.get(url)
+    return res.data
+  }
 }
