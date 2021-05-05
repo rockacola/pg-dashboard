@@ -109,11 +109,9 @@ function Dashboard() {
 
   const renderQueryResult = () => {
     return (
-      <Fragment>
+      <div class="mb-12">
         <div>
-          <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
-            Query Results
-          </h2>
+          <h2 className="my-4 text-2xl font-semibold">Query Results</h2>
           <div className="flex my-2">
             <DashboardTabItem
               label="Table"
@@ -129,7 +127,7 @@ function Dashboard() {
         </div>
         {queryResultActiveTab === 'table' && renderTableResult()}
         {queryResultActiveTab === 'json' && renderJsonResult()}
-      </Fragment>
+      </div>
     )
   }
 
@@ -158,9 +156,7 @@ function Dashboard() {
     <div className="h-screen w-full flex overflow-hidden">
       <nav className="flex flex-col bg-gray-200 w-64 px-12 pt-4 pb-6">
         <div className="flex flex-row border-b items-center justify-between pb-2">
-          <span className="text-lg font-semibold capitalize dark:text-gray-300">
-            Dashboard
-          </span>
+          <span className="text-lg font-semibold capitalize">Dashboard</span>
         </div>
         <div className="mt-2 text-gray-600">
           <DashboardNavItem
@@ -190,10 +186,7 @@ function Dashboard() {
         </div>
       </nav>
 
-      <main
-        className="flex-1 flex flex-col bg-gray-100 dark:bg-gray-700 transition
-      duration-500 ease-in-out overflow-y-auto"
-      >
+      <main className="flex-1 flex flex-col bg-gray-100 transition duration-500 ease-in-out overflow-y-auto">
         <div className="max-w-4xl mx-10 my-2">
           <div>
             <div className="flex">
