@@ -11,6 +11,7 @@ class PgClientHandler {
    * @param {number|undefined} dto.host
    * @param {string|undefined} dto.port
    * @param {string|undefined} dto.database
+   * @param {boolean|undefined} dto.ssl
    * @returns {Promise<Client>}
    */
   static async getConnectedClient(dto) {
@@ -20,6 +21,7 @@ class PgClientHandler {
       host: dto.host,
       port: dto.port,
       database: dto.defaultDatabase,
+      ssl: dto.ssl,
     })
     await client.connect()
     return client

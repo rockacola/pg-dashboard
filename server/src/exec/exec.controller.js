@@ -1,6 +1,7 @@
 const debug = require('debug')
 const express = require('express')
 const PgClientHandler = require('../handlers/pg-client-handler')
+const CastHelper = require('../helpers/cast-helper')
 
 const log = debug('app:ExecController')
 
@@ -9,6 +10,7 @@ class ExecController {
     log('checkConnection triggered.')
     try {
       const dto = ExecController._getDto(req)
+      log('dto:', dto)
       const client = await PgClientHandler.getConnectedClient(dto)
       client.end()
 
@@ -60,6 +62,7 @@ class ExecController {
       password: req.query.pass,
       port: parseInt(req.query.port, 10),
       defaultDatabase: req.query.db,
+      ssl: CastHelper.toBool(req.query.ssl),
     }
     return dto
   }
