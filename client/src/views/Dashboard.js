@@ -54,7 +54,6 @@ function Dashboard() {
     }
 
     const tableNames = await PgServerHandler.getTables(targetConnection)
-    console.log('tableNames:', tableNames)
     dispatch(
       setTableNames({
         key: connectionHashKey,

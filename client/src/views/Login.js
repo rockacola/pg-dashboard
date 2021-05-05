@@ -57,7 +57,6 @@ function Login() {
     setIsLoading(true)
     const connectionObj = { host, port, username, password, database }
     const isSuccess = await PgServerHandler.checkConnection(connectionObj)
-    console.log('isSuccess:', isSuccess)
 
     if (isSuccess) {
       const hashKey = HashHelper.getHashByObject(connectionObj)
