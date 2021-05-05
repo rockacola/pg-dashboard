@@ -23,7 +23,7 @@ function Dashboard() {
   const connectionHashKey = useMemo(() => {
     console.log('connectionHashKey useMember triggered.')
     const urlParams = qs.parse(location.search)
-    return urlParams.c
+    return urlParams.connect
   }, [location])
 
   const targetDatabaseName = useMemo(() => {

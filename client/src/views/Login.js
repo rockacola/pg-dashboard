@@ -70,7 +70,7 @@ function Login() {
       )
 
       // Redirect user to 'dashboard' along with current connection
-      history.push(`/dashboard?c=${hashKey}`)
+      history.push(`/dashboard?connect=${hashKey}`)
     } else {
       // TODO: display error message
       setIsLoading(false)
