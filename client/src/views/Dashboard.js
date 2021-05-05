@@ -16,9 +16,10 @@ function Dashboard() {
   const [query, setQuery] = useState('')
   const [resultObject, setResultObject] = useState(undefined)
   const allConnections = useSelector((state) => state.connection.connections)
-  console.log('allConnections:', allConnections)
+  // console.log('allConnections:', allConnections)
   const allTableNames = useSelector((state) => state.connection.tableNames)
-  console.log('allTableNames:', allTableNames)
+  // console.log('allTableNames:', allTableNames)
+  const [queryResultActiveTab, setQueryResultActiveTab] = useState('table')
 
   const connectionHashKey = useMemo(() => {
     console.log('connectionHashKey useMember triggered.')
@@ -94,13 +95,30 @@ function Dashboard() {
     history.push(`/`)
   }
 
+  const onTabClickHandler = (tabKey) => {
+    console.log('onTabClickHandler triggered. tabKey:', tabKey)
+    setQueryResultActiveTab(tabKey)
+  }
+
   const onSubmitHandler = (e) => {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
     performQuery()
   }
 
-  const renderResult = () => {
+  const renderTableResult = () => {
+    if (!resultObject) {
+      return null
+    }
+
+    return (
+      <div className="bg-gray-50 p-2 text-xs text-gray-600">
+        TABLE RESULT TBA
+      </div>
+    )
+  }
+
+  const renderJsonResult = () => {
     if (!resultObject) {
       return null
     }
@@ -157,7 +175,7 @@ function Dashboard() {
           <div>
             <div className="flex">
               <DashboardTabItem label="Query Editor" isActive={true} />
-              <DashboardTabItem label="Query History" isActive={false} />
+              {/* <DashboardTabItem label="Query History" isActive={false} /> */}
             </div>
             <form className="mt-2" onSubmit={onSubmitHandler}>
               <textarea
@@ -180,16 +198,21 @@ function Dashboard() {
             <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
               Query Results
             </h2>
-            <div className="flex">
-              <DashboardTabItem label="Lorem" isActive={true} />
-              <DashboardTabItem label="Ipsum" isActive={false} />
-              <DashboardTabItem label="Dolor" isActive={false} />
+            <div className="flex my-2">
+              <DashboardTabItem
+                label="Table"
+                onClick={() => onTabClickHandler('table')}
+                isActive={queryResultActiveTab === 'table'}
+              />
+              <DashboardTabItem
+                label="JSON"
+                onClick={() => onTabClickHandler('json')}
+                isActive={queryResultActiveTab === 'json'}
+              />
             </div>
           </div>
-          <div className="mt-4 pb-2 flex items-center justify-between text-gray-600">
-            Lorem ipsum doloar sit atem.
-          </div>
-          {renderResult()}
+          {queryResultActiveTab === 'table' && renderTableResult()}
+          {queryResultActiveTab === 'json' && renderJsonResult()}
         </div>
       </main>
     </div>
