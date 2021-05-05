@@ -55,6 +55,10 @@ class ExecController {
     }
   }
 
+  static async health(req, res) {
+    res.json({ isSuccess: true })
+  }
+
   static _getDto(req) {
     const dto = {
       host: req.query.host,
