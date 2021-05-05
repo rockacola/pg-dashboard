@@ -1,5 +1,5 @@
 import { DatabaseIcon, LogoutIcon, TableIcon } from '@heroicons/react/outline'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router'
 import { PgServerHandler } from '../handlers/pg-server-handler'
@@ -109,7 +109,7 @@ function Dashboard() {
 
   const renderQueryResult = () => {
     return (
-      <div class="mb-12">
+      <div className="mb-12">
         <div>
           <h2 className="my-4 text-2xl font-semibold">Query Results</h2>
           <div className="flex my-2">
