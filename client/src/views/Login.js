@@ -14,6 +14,7 @@ import { setConnectionInfo } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
 import Spinner from '../partials/spinner'
+import LoginErrorMessage from '../partials/login-error-message'
 
 function Login() {
   const history = useHistory()
@@ -25,6 +26,7 @@ function Login() {
   const [password, setPassword] = useState('')
   const [database, setDatabase] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const onInputChangeHandler = (e) => {
     // console.log('onInputChangeHandler triggered. e:', e)
@@ -71,7 +73,8 @@ function Login() {
       // Redirect user to 'dashboard' along with current connection
       history.push(`/dashboard?connect=${hashKey}`)
     } else {
-      // TODO: display error message
+      const msg = `Unable to connect to server: ${host}. `
+      setErrorMessage(msg)
       setIsLoading(false)
     }
   }
@@ -188,6 +191,7 @@ function Login() {
           </div>
           {isLoading && renderLoading()}
           {!isLoading && renderForm()}
+          {!!errorMessage && <LoginErrorMessage message={errorMessage} />}
         </div>
       </div>
     </div>
