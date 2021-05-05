@@ -1,3 +1,9 @@
+/**
+ * Set sample data script.
+ * 
+ * Example usage:
+ * node scripts/set-sample-data postgresql://user:pass@localhost:5432/default_db
+ */
 const { Client } = require('pg')
 const Chance = require('chance')
 

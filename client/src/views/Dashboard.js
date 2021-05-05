@@ -1,26 +1,69 @@
-import { LogoutIcon, TableIcon } from '@heroicons/react/outline'
-import { useMemo, useState } from 'react'
+import { DatabaseIcon, LogoutIcon, TableIcon } from '@heroicons/react/outline'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router'
+import { useLocation } from 'react-router'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import DashboardButton from '../partials/dashboard-button'
 import DashboardNavItem from '../partials/dashboard-nav-item'
 import DashboardTabItem from '../partials/dashboard-tab-item'
 import qs from 'query-string'
+import { setTableNames } from '../reducers/connection-slice'
 
 function Dashboard() {
-  const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
   const [query, setQuery] = useState('')
   const [resultObject, setResultObject] = useState(undefined)
   const allConnections = useSelector((state) => state.connection.connections)
   console.log('allConnections:', allConnections)
+  const allTableNames = useSelector((state) => state.connection.tableNames)
+  console.log('allTableNames:', allTableNames)
 
   const connectionHashKey = useMemo(() => {
+    console.log('connectionHashKey useMember triggered.')
     const urlParams = qs.parse(location.search)
     return urlParams.c
   }, [location])
+
+  const targetDatabaseName = useMemo(() => {
+    const targetConnection = allConnections[connectionHashKey]
+
+    if (!targetConnection || !targetConnection.database) {
+      return 'Database'
+    }
+    return targetConnection.database
+  }, [allConnections, connectionHashKey])
+
+  const targetTableNames = useMemo(() => {
+    const tableTableNames = allTableNames[connectionHashKey]
+
+    if (!tableTableNames) {
+      return []
+    }
+    return tableTableNames
+  }, [allTableNames, connectionHashKey])
+
+  const updateTableNames = async () => {
+    console.log('updateTableNames triggered.')
+    const targetConnection = allConnections[connectionHashKey]
+    if (!targetConnection) {
+      return
+    }
+
+    const tableNames = await PgServerHandler.getTables(targetConnection)
+    console.log('tableNames:', tableNames)
+    dispatch(
+      setTableNames({
+        key: connectionHashKey,
+        value: tableNames,
+      })
+    )
+  }
+
+  useEffect(() => {
+    console.log('useEffect on mount')
+    updateTableNames()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const performQuery = async () => {
     const targetConnection = allConnections[connectionHashKey]
@@ -74,9 +117,25 @@ function Dashboard() {
           </span>
         </div>
         <div className="mt-2 text-gray-600">
-          <DashboardNavItem label="Tables" icon={<TableIcon />} />
+          <DashboardNavItem
+            label={targetDatabaseName}
+            icon={<DatabaseIcon />}
+          />
+          <div>
+            {targetTableNames.map((tableName) => (
+              <div
+                key={tableName}
+                className="flex items-center my-2 ml-2 text-gray-800 hover:text-gray-600 transition"
+              >
+                <div className="w-4 h-4">
+                  <TableIcon />
+                </div>
+                <div className="ml-2">{tableName}</div>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="mt-auto flex items-center text-red-700 dark:text-red-400">
+        <div className="mt-auto flex items-center text-red-700">
           <DashboardNavItem label="Disconnect" icon={<LogoutIcon />} />
         </div>
       </nav>

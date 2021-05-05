@@ -10,7 +10,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
 import { useDispatch } from 'react-redux'
-import { update } from '../reducers/connection-slice'
+import { setConnectionInfo } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
 import Spinner from '../partials/spinner'
@@ -63,7 +63,7 @@ function Login() {
       const hashKey = HashHelper.getHashByObject(connectionObj)
       console.log('hashKey:', hashKey)
       dispatch(
-        update({
+        setConnectionInfo({
           key: hashKey,
           value: connectionObj,
         })
