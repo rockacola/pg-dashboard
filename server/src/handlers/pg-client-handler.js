@@ -1,4 +1,7 @@
 const { Client } = require('pg')
+const debug = require('debug')
+
+const log = debug('app:PgClientHandler')
 
 class PgClientHandler {
   /**
@@ -8,7 +11,7 @@ class PgClientHandler {
    * @param {number|undefined} dto.host
    * @param {string|undefined} dto.port
    * @param {string|undefined} dto.database
-   * @returns {Client}
+   * @returns {Promise<Client>}
    */
   static async getConnectedClient(dto) {
     const client = new Client({
@@ -24,7 +27,7 @@ class PgClientHandler {
 
   /**
    * @param {Client} client
-   * @returns {object}
+   * @returns {Promise<object>}
    */
   static async getTableNames(client) {
     const query = `SELECT * FROM pg_tables WHERE schemaname = 'public'`
@@ -41,6 +44,18 @@ class PgClientHandler {
     }
 
     return tables
+  }
+
+  /**
+   * @param {Client} client
+   * @returns {Promise<object>}
+   */
+  static async query(client, query) {
+    // log('query triggered. query:', query)
+    const res = await client.query(query)
+    // log('res:', res)
+    // TODO: data massage
+    return res
   }
 }
 

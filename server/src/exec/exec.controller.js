@@ -2,7 +2,7 @@ const debug = require('debug')
 const express = require('express')
 const PgClientHandler = require('../handlers/pg-client-handler')
 
-const log = debug('app:exec-controller')
+const log = debug('app:ExecController')
 
 class ExecController {
   static async checkConnection(req, res) {
@@ -23,9 +23,13 @@ class ExecController {
 
     try {
       const dto = ExecController._getDto(req)
+      // log('dto:', dto)
       const client = await PgClientHandler.getConnectedClient(dto)
-      const queryRes = await client.query(dto.query)
-      // console.log('queryRes:', queryRes)
+      // log('client:', client)
+      const query = req.query.q
+      // log('query:', query)
+      const queryRes = await PgClientHandler.query(client, query)
+      // log('queryRes:', queryRes)
       await client.end()
 
       res.json({ isSuccess: true, data: queryRes })
@@ -40,7 +44,7 @@ class ExecController {
       const dto = ExecController._getDto(req)
       const client = await PgClientHandler.getConnectedClient(dto)
       const queryRes = await PgClientHandler.getTableNames(client)
-      // console.log('queryRes:', queryRes)
+      // log('queryRes:', queryRes)
       client.end()
 
       res.json({ isSuccess: true, data: queryRes })
