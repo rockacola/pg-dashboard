@@ -3,11 +3,11 @@ const ExecController = require('./exec/exec.controller')
 
 const router = express.Router()
 
-router.get('/check-connection', ExecController.checkConnection)
-router.get('/query', ExecController.query)
+router.get('/api/check', ExecController.checkConnection)
+router.get('/api/query', ExecController.query)
 
 router.get('/', (req, res) => {
-  res.json({ 'message:': 'ok' })
+  res.json({ 'timestamp:': Date.now() })
 })
 
 module.exports = router

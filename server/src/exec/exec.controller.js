@@ -1,6 +1,6 @@
 const debug = require('debug')
 const express = require('express')
-const { Client } = require('pg')
+const PgClientHandler = require('../handlers/pg-client-handler')
 
 const log = debug('app:exec-controller')
 
@@ -17,7 +17,7 @@ class ExecController {
       }
       log('dto:', dto)
 
-      const client = await ExecController._getConnectedClient(dto)
+      const client = await PgClientHandler.getConnectedClient(dto)
       client.end()
 
       res.json({ isSuccess: true })
@@ -40,7 +40,7 @@ class ExecController {
       }
       // log('dto:', dto)
 
-      const client = await ExecController._getConnectedClient(dto)
+      const client = await PgClientHandler.getConnectedClient(dto)
       const queryRes = await client.query(dto.query)
       console.log('queryRes:', queryRes)
       await client.end()
@@ -49,18 +49,6 @@ class ExecController {
     } catch (err) {
       res.json({ isSuccess: false, message: err.message })
     }
-  }
-
-  static async _getConnectedClient(dto) {
-    const client = new Client({
-      user: dto.user,
-      password: dto.password,
-      host: dto.host,
-      port: dto.port,
-      database: dto.defaultDatabase,
-    })
-    await client.connect()
-    return client
   }
 }
 
