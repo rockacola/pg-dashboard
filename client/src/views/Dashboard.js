@@ -1,5 +1,5 @@
 import { DatabaseIcon, LogoutIcon, TableIcon } from '@heroicons/react/outline'
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router'
 import { PgServerHandler } from '../handlers/pg-server-handler'
@@ -8,6 +8,7 @@ import DashboardNavItem from '../partials/dashboard-nav-item'
 import DashboardTabItem from '../partials/dashboard-tab-item'
 import qs from 'query-string'
 import { setTableNames } from '../reducers/connection-slice'
+import DashboardResultTable from '../partials/dashboard-result-table'
 
 function Dashboard() {
   const history = useHistory()
@@ -106,16 +107,38 @@ function Dashboard() {
     performQuery()
   }
 
+  const renderQueryResult = () => {
+    return (
+      <Fragment>
+        <div>
+          <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
+            Query Results
+          </h2>
+          <div className="flex my-2">
+            <DashboardTabItem
+              label="Table"
+              onClick={() => onTabClickHandler('table')}
+              isActive={queryResultActiveTab === 'table'}
+            />
+            <DashboardTabItem
+              label="JSON"
+              onClick={() => onTabClickHandler('json')}
+              isActive={queryResultActiveTab === 'json'}
+            />
+          </div>
+        </div>
+        {queryResultActiveTab === 'table' && renderTableResult()}
+        {queryResultActiveTab === 'json' && renderJsonResult()}
+      </Fragment>
+    )
+  }
+
   const renderTableResult = () => {
     if (!resultObject) {
       return null
     }
 
-    return (
-      <div className="bg-gray-50 p-2 text-xs text-gray-600">
-        TABLE RESULT TBA
-      </div>
-    )
+    return <DashboardResultTable data={resultObject} />
   }
 
   const renderJsonResult = () => {
@@ -194,25 +217,7 @@ function Dashboard() {
             </form>
           </div>
 
-          <div>
-            <h2 className="my-4 text-4xl font-semibold dark:text-gray-400">
-              Query Results
-            </h2>
-            <div className="flex my-2">
-              <DashboardTabItem
-                label="Table"
-                onClick={() => onTabClickHandler('table')}
-                isActive={queryResultActiveTab === 'table'}
-              />
-              <DashboardTabItem
-                label="JSON"
-                onClick={() => onTabClickHandler('json')}
-                isActive={queryResultActiveTab === 'json'}
-              />
-            </div>
-          </div>
-          {queryResultActiveTab === 'table' && renderTableResult()}
-          {queryResultActiveTab === 'json' && renderJsonResult()}
+          {!!resultObject && renderQueryResult()}
         </div>
       </main>
     </div>
