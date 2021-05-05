@@ -50,6 +50,29 @@ class ExecController {
       res.json({ isSuccess: false, message: err.message })
     }
   }
+
+  static async getTables(req, res) {
+    log('getTables triggered.')
+    try {
+      const dto = {
+        host: req.query.host,
+        user: req.query.user,
+        password: req.query.pass,
+        port: parseInt(req.query.port, 10),
+        defaultDatabase: req.query.db,
+      }
+      log('dto:', dto)
+
+      const client = await PgClientHandler.getConnectedClient(dto)
+      const queryRes = await PgClientHandler.getTableNames(client)
+      // console.log('queryRes:', queryRes)
+      client.end()
+
+      res.json({ isSuccess: true, data: queryRes })
+    } catch (err) {
+      res.json({ isSuccess: false, message: err.message })
+    }
+  }
 }
 
 module.exports = ExecController

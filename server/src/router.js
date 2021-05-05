@@ -5,6 +5,7 @@ const router = express.Router()
 
 router.get('/api/check', ExecController.checkConnection)
 router.get('/api/query', ExecController.query)
+router.get('/api/tables', ExecController.getTables)
 
 router.get('/', (req, res) => {
   res.json({ 'timestamp:': Date.now() })

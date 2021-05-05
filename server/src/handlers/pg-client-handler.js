@@ -21,6 +21,27 @@ class PgClientHandler {
     await client.connect()
     return client
   }
+
+  /**
+   * @param {Client} client
+   * @returns {object}
+   */
+  static async getTableNames(client) {
+    const query = `SELECT * FROM pg_tables WHERE schemaname = 'public'`
+    const res = await client.query(query)
+
+    /** @param {string[]} */
+    const tables = []
+    if (res.rows && res.rows.length > 0) {
+      for (const row of res.rows) {
+        if (row && row.tablename) {
+          tables.push(row.tablename)
+        }
+      }
+    }
+
+    return tables
+  }
 }
 
 module.exports = PgClientHandler
