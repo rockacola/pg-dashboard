@@ -1,7 +1,7 @@
 import { DatabaseIcon, LogoutIcon, TableIcon } from '@heroicons/react/outline'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import DashboardButton from '../partials/dashboard-button'
 import DashboardNavItem from '../partials/dashboard-nav-item'
@@ -10,6 +10,7 @@ import qs from 'query-string'
 import { setTableNames } from '../reducers/connection-slice'
 
 function Dashboard() {
+  const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
   const [query, setQuery] = useState('')
@@ -89,6 +90,10 @@ function Dashboard() {
     setQuery('')
   }
 
+  const onDisconnectClickHandler = () => {
+    history.push(`/`)
+  }
+
   const onSubmitHandler = (e) => {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
@@ -136,7 +141,11 @@ function Dashboard() {
           </div>
         </div>
         <div className="mt-auto flex items-center text-red-700">
-          <DashboardNavItem label="Disconnect" icon={<LogoutIcon />} />
+          <DashboardNavItem
+            label="Disconnect"
+            icon={<LogoutIcon />}
+            onClick={onDisconnectClickHandler}
+          />
         </div>
       </nav>
 
