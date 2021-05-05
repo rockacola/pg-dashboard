@@ -51,15 +51,15 @@ function Login() {
     }
   }
 
-  const checkConnection = async () => {
-    console.log('checkConnection triggered.')
+  const performCheckConnection = async () => {
+    console.log('performCheckConnection triggered.')
 
     setIsLoading(true)
     const connectionObj = { host, port, username, password, database }
-    const res = await PgServerHandler.checkConnection(connectionObj)
-    console.log('res:', res)
+    const isSuccess = await PgServerHandler.checkConnection(connectionObj)
+    console.log('isSuccess:', isSuccess)
 
-    if (!!res && !!res.isSuccess) {
+    if (isSuccess) {
       const hashKey = HashHelper.getHashByObject(connectionObj)
       console.log('hashKey:', hashKey)
       dispatch(
@@ -80,7 +80,7 @@ function Login() {
   const onSubmitHandler = (e) => {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
-    checkConnection()
+    performCheckConnection()
   }
 
   useEffect(() => {
