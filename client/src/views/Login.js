@@ -170,7 +170,7 @@ function Login() {
 
   return (
     <div
-      className="bg-no-repeat bg-center bg-cover"
+      className="bg-no-repeat bg-cover"
       style={{ backgroundImage: 'url(/images/bg-sample-mountain.jpg)' }}
     >
       <div className="min-h-screen flex flex-col items-center px-2 md:px-0 py-8">

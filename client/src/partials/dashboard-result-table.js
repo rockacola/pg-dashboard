@@ -12,7 +12,7 @@ function DashboardResultTable({ data }) {
   const renderHeadCell = (value, index) => (
     <th
       key={index}
-      className="px-6 py-3 border-b-2 border-gray-300 text-left leading-4 text-blue-500 tracking-wider"
+      className="px-6 py-3 border-b-2 border-gray-200 text-left leading-4 text-blue-600 tracking-wider"
     >
       {value}
     </th>
@@ -27,7 +27,7 @@ function DashboardResultTable({ data }) {
     return (
       <td
         key={`${rIndex}_${cIndex}`}
-        className="px-6 py-2 whitespace-no-wrap border-b text-blue-900 border-gray-100 text-sm leading-5"
+        className="px-6 py-2 whitespace-no-wrap border-b text-gray-800 border-gray-100 text-sm leading-5"
       >
         {strVal}
       </td>
@@ -36,16 +36,16 @@ function DashboardResultTable({ data }) {
 
   return (
     <div className="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 pr-10 lg:px-8">
-      <div className="align-middle inline-block min-w-full shadow overflow-hidden bg-white shadow-dashboard px-4 pt-1 rounded-bl-lg rounded-br-lg">
+      <div className="align-middle inline-block min-w-full shadow overflow-hidden bg-gray-50 shadow-dashboard px-4 pt-1 rounded">
         <table className="min-w-full">
           <thead>
             <tr>
               {fields.map((field, index) => renderHeadCell(field, index))}
             </tr>
           </thead>
-          <tbody className="bg-white">
+          <tbody>
             {dataRows.map((dataRow, rIndex) => (
-              <tr key={rIndex} className="transition hover:bg-gray-50">
+              <tr key={rIndex} className="transition hover:bg-white">
                 {fields.map((field, cIndex) =>
                   renderBodyCell(dataRow[field], rIndex, cIndex)
                 )}
