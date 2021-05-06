@@ -56,6 +56,15 @@ $ yarn start
 
 ### Client Usage
 
+Create a copy of the environment variable file.
+
+```sh
+cd client/
+cp .env.template .env
+```
+
+Update the configuration details.
+
 ```sh
 $ cd client/
 $ yarn start
