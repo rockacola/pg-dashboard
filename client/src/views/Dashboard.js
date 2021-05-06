@@ -160,10 +160,10 @@ function Dashboard() {
 
   return (
     <div
-      className="h-screen w-full flex overflow-hidden bg-no-repeat bg-cover"
+      className="min-h-screen md:h-screen md:w-full flex flex-col md:flex-row md:overflow-hidden bg-no-repeat bg-cover"
       style={{ backgroundImage: 'url(/images/bg-sample-mountain.jpg)' }}
     >
-      <nav className="flex flex-col bg-gray-300 bg-opacity-60 w-64 px-12 pt-4 pb-6">
+      <nav className="flex flex-col bg-gray-300 bg-opacity-60 md:w-64 px-12 pt-4 pb-6">
         <div className="text-lg text-gray-800 font-semibold mt-1">
           Dashboard
         </div>
@@ -196,7 +196,7 @@ function Dashboard() {
         </div>
       </nav>
 
-      <main className="flex-1 flex flex-col bg-gray-100 bg-opacity-80 transition duration-500 ease-in-out overflow-y-auto">
+      <main className="flex-1 flex flex-col bg-gray-100 bg-opacity-80 transition duration-500 ease-in-out md:overflow-y-auto">
         <div className="max-w-4xl mx-10 my-2">
           <div>
             <div className="flex">
