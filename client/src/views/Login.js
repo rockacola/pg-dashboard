@@ -6,7 +6,7 @@ import {
   LocationMarkerIcon,
   UserIcon,
 } from '@heroicons/react/outline'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
 import { useDispatch } from 'react-redux'
@@ -108,68 +108,59 @@ function Login() {
     }
   }, [location])
 
-  const subcaption = useMemo(() => {
-    if (isLoading) {
-      return 'Connecting...'
-    }
-    return 'Credentials'
-  }, [isLoading])
-
   const renderLoading = () => (
-    <div className="flex justify-center mt-8">
+    <div className="flex justify-center my-16">
       <Spinner size={16} />
     </div>
   )
 
   const renderForm = () => (
-    <div className="mt-10">
+    <div className="mt-4">
       <form onSubmit={onSubmitHandler}>
         <LoginTextInput
           inputFor="host"
-          label="Host"
           value={host}
           onChange={onInputChangeHandler}
-          inputPlaceholder="127.0.0.1"
+          inputPlaceholder="Host"
           icon={<LocationMarkerIcon />}
         />
         <LoginTextInput
           inputFor="port"
-          label="Port"
           value={port}
           onChange={onInputChangeHandler}
-          inputPlaceholder="5432"
+          inputPlaceholder="Port"
           icon={<InboxIcon />}
         />
         <LoginTextInput
           inputFor="user"
-          label="User"
           value={username}
           onChange={onInputChangeHandler}
-          inputPlaceholder="root"
+          inputPlaceholder="User"
           icon={<UserIcon />}
         />
         <LoginTextInput
           inputFor="password"
           inputType="password"
-          label="Password"
           value={password}
           onChange={onInputChangeHandler}
+          inputPlaceholder="Password"
         />
         <LoginTextInput
           inputFor="database"
-          label="Database"
           value={database}
           onChange={onInputChangeHandler}
-          inputPlaceholder="default"
+          inputPlaceholder="Database"
           icon={<DatabaseIcon />}
         />
 
-        <div className="flex w-full mt-8">
+        {!!errorMessage && <LoginErrorMessage message={errorMessage} />}
+
+        <div className="flex justify-center w-full mt-8">
           <button
             type="submit"
-            className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 w-full transition duration-150 ease-in"
+            className="flex items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded py-2 pl-4 pr-3 transition duration-150 ease-in"
           >
-            <span className="mr-2 uppercase">Test Connect</span>
+            <span className="mr-2">Connect</span>
             <span className="w-4 h-4">{<ArrowCircleRightIcon />}</span>
           </button>
         </div>
@@ -178,22 +169,18 @@ function Login() {
   )
 
   return (
-    <div className="view--login bg-red-300">
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-300">
-        <div className="flex flex-col bg-white shadow-md px-4 sm:px-6 md:px-8 lg:px-10 py-8 rounded-md w-full max-w-md">
-          <div className="font-medium self-center text-xl sm:text-2xl uppercase text-gray-800">
+    <div
+      className="bg-no-repeat bg-center bg-cover"
+      style={{ backgroundImage: 'url(/images/bg-sample-mountain.jpg)' }}
+    >
+      <div className="min-h-screen flex flex-col items-center px-2 md:px-0 py-8">
+        <div className="flex flex-col bg-white px-4 sm:px-6 md:px-8 lg:px-10 py-8 w-full max-w-md border-2 border-gray-200">
+          <div className="font-medium self-center text-xl sm:text-lg text-gray-600">
             Connect to PostgreSQL
           </div>
-          <div className="relative mt-10 h-px bg-gray-300">
-            <div className="absolute left-0 top-0 flex justify-center w-full -mt-2">
-              <span className="bg-white px-4 text-xs text-gray-500 uppercase">
-                {subcaption}
-              </span>
-            </div>
-          </div>
+
           {isLoading && renderLoading()}
           {!isLoading && renderForm()}
-          {!!errorMessage && <LoginErrorMessage message={errorMessage} />}
         </div>
       </div>
     </div>
