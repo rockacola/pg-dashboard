@@ -64,6 +64,14 @@ function Dashboard() {
 
   useEffect(() => {
     console.log('useEffect on mount')
+
+    // Check if targetted valid connection data is available
+    console.log('connectionHashKey:', connectionHashKey)
+    const targetConnection = allConnections[connectionHashKey]
+    if (!targetConnection) {
+      history.push(`/`)
+    }
+
     updateTableNames()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
