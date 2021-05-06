@@ -60,9 +60,10 @@ function Login() {
 
     setIsLoading(true)
     const connectionObj = { host, port, username, password, database }
-    const isSuccess = await PgServerHandler.checkConnection(connectionObj)
 
-    if (isSuccess) {
+    try {
+      await PgServerHandler.checkConnection(connectionObj)
+
       const hashKey = HashHelper.getHashByObject(connectionObj)
       console.log('hashKey:', hashKey)
       dispatch(
@@ -74,9 +75,8 @@ function Login() {
 
       // Redirect user to 'dashboard' along with current connection
       history.push(`/dashboard?connect=${hashKey}`)
-    } else {
-      const msg = `Unable to connect to server: ${host}. `
-      setErrorMessage(msg)
+    } catch (err) {
+      setErrorMessage(err.message)
       setIsLoading(false)
     }
   }
