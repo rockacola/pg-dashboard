@@ -1,7 +1,7 @@
 import qs from 'query-string'
 import axios from 'axios'
 
-const SERVER_BASE_URL = `http://localhost:3300/api` // TODO: move to env var
+const SERVER_BASE_URL = process.env.REACT_APP_SERVER_BASE_URL
 
 export class PgServerHandler {
   /**

@@ -17,6 +17,8 @@ import Spinner from '../partials/spinner'
 import LoginErrorMessage from '../partials/login-error-message'
 
 function Login() {
+  console.log('process.env:', process.env)
+
   const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
