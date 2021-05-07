@@ -1,5 +1,9 @@
 import { ClipboardIcon, TrashIcon } from '@heroicons/react/outline'
 
+/**
+ * @param {{ queryHashKey: string, query: string, onSelect: function():void, onDelete: function():void }}
+ * @returns {JSX.Element}
+ */
 function DashboardQueryItem({ queryHashKey, query, onSelect, onDelete }) {
   return (
     <div

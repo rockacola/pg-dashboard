@@ -1,5 +1,9 @@
 import moment from 'moment'
 
+/**
+ * @param {{ value: string }}
+ * @returns {JSX.Element}
+ */
 function DateNugget({ value }) {
   const m = moment(value)
 

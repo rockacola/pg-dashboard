@@ -1,3 +1,7 @@
+/**
+ * @param {{ size: number }}
+ * @returns {JSX.Element}
+ */
 function Spinner({ size = 32 }) {
   const sizeClasses = `h-${size} w-${size}`
 

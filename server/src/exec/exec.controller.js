@@ -6,6 +6,10 @@ const CastHelper = require('../helpers/cast-helper')
 const log = debug('app:ExecController')
 
 class ExecController {
+  /**
+   * @param {express.Request} req
+   * @param {express.Response} res
+   */
   static async checkConnection(req, res) {
     log('checkConnection triggered.')
     try {
@@ -20,6 +24,10 @@ class ExecController {
     }
   }
 
+  /**
+   * @param {express.Request} req
+   * @param {express.Response} res
+   */
   static async query(req, res) {
     log('query triggered.')
 
@@ -40,6 +48,10 @@ class ExecController {
     }
   }
 
+  /**
+   * @param {express.Request} req
+   * @param {express.Response} res
+   */
   static async getTables(req, res) {
     log('getTables triggered.')
     try {
@@ -55,10 +67,18 @@ class ExecController {
     }
   }
 
+  /**
+   * @param {express.Request} req
+   * @param {express.Response} res
+   */
   static async health(req, res) {
     res.json({ isSuccess: true })
   }
 
+  /**
+   * @param {express.Request} req
+   * @returns {Object}
+   */
   static _getDto(req) {
     const dto = {
       host: req.query.host,

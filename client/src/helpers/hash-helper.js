@@ -3,7 +3,7 @@ import { StringHelper } from './string-helper'
 
 export class HashHelper {
   /**
-   * @param {object} obj
+   * @param {Object} obj
    * @returns {string}
    */
   static getHashByObject(obj) {

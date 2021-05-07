@@ -1,3 +1,7 @@
+/**
+ * @param {{ label: string, isActive: boolean, onClick: function():void }}
+ * @returns {JSX.Element}
+ */
 function LoginTabItem({ label, isActive, onClick }) {
   let extraClasses = ''
   if (isActive) {

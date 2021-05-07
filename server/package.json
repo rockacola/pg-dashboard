@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Web-based client for PostgreSQL databases written in JavaScript.",
   "engines": {
     "node": ">=14.16.0"

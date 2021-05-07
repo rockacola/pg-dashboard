@@ -1,5 +1,9 @@
 import { BeakerIcon } from '@heroicons/react/solid'
 
+/**
+ * @param {{ inputFor: string, inputType: string, label: string, value: string, inputPlaceholder: string, icon: JSX.Element, onChange: function():void }}
+ * @returns {JSX.Element}
+ */
 function LoginTextInput({
   inputFor,
   inputType = 'text',
@@ -9,6 +13,9 @@ function LoginTextInput({
   icon = <BeakerIcon />,
   onChange,
 }) {
+  /**
+   * @returns {JSX.Element}
+   */
   const renderLabel = () => (
     <label htmlFor={inputFor} className="mb-1 tracking-wide text-gray-600">
       {label}
