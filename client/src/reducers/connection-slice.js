@@ -4,6 +4,7 @@ import { StorageBroker } from '../brokers/storage-broker'
 const _initialState = {
   connections: StorageBroker.getKnownConnections(),
   tableNames: StorageBroker.getKnownTableNames(),
+  queries: StorageBroker.getQueries(),
 }
 
 export const connectionSlice = createSlice({
@@ -17,24 +18,39 @@ export const connectionSlice = createSlice({
       StorageBroker.setKnownConnections(state.connections)
     },
 
-    removeConnectionInfo: (state, action) => {
-      const key = action.payload.key
-      delete state.connections[key]
-      StorageBroker.setKnownConnections(state.connections)
-    },
-
     setTableNames: (state, action) => {
       const key = action.payload.key
       const value = action.payload.value
       state.tableNames[key] = value
       StorageBroker.setKnownTableNames(state.tableNames)
     },
+
+    setQuery: (state, action) => {
+      const key = action.payload.key
+      const value = action.payload.value
+      state.queries[key] = value
+      StorageBroker.setQuries(state.queries)
+    },
+
+    removeConnectionInfo: (state, action) => {
+      const key = action.payload.key
+      delete state.connections[key]
+      StorageBroker.setKnownConnections(state.connections)
+    },
+
+    removeQuery: (state, action) => {
+      const key = action.payload.key
+      delete state.queries[key]
+      StorageBroker.setQuries(state.queries)
+    },
   },
 })
 
 export const {
   setConnectionInfo,
-  removeConnectionInfo,
   setTableNames,
+  setQuery,
+  removeConnectionInfo,
+  removeQuery,
 } = connectionSlice.actions
 export default connectionSlice.reducer

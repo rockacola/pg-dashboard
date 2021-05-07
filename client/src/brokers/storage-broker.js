@@ -37,6 +37,23 @@ export class StorageBroker {
   }
 
   /**
+   * @returns {object}
+   */
+  static getQueries() {
+    const strData = LocalstorageHandler.getData('pgd:queries')
+    if (strData) {
+      try {
+        const data = JSON.parse(strData)
+        return data
+      } catch (err) {
+        // TODO: exception handling
+      }
+    }
+
+    return {}
+  }
+
+  /**
    * @param {object} connections
    */
   static setKnownConnections(connections) {
@@ -50,5 +67,13 @@ export class StorageBroker {
   static setKnownTableNames(tableNames) {
     const strData = StringHelper.getStableStringify(tableNames)
     LocalstorageHandler.setData('pgd:table-names', strData)
+  }
+
+  /**
+   * @param {object} queries
+   */
+  static setQuries(queries) {
+    const strData = StringHelper.getStableStringify(queries)
+    LocalstorageHandler.setData('pgd:quries', strData)
   }
 }
