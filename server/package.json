@@ -5,6 +5,15 @@
   "engines": {
     "node": ">=14.16.0"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/rockacola/pg-dashboard#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rockacola/pg-dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rockacola/pg-dashboard/issues"
+  },
   "scripts": {
     "start": "NODE_ENV=production nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.production",
     "debug": "nodemon -r dotenv/config ./src/server.js dotenv_config_path=.env.development",

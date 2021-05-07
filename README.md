@@ -90,3 +90,7 @@ TBA
 ## Feedback
 
 Please [open an issue](/issues/new) if you want to leave feedback.
+
+## License
+
+Open-source [MIT](/LICENSE.md).
