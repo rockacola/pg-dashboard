@@ -8,6 +8,15 @@ import DashboardTabItem from '../partials/dashboard-tab-item'
 import qs from 'query-string'
 import { setTableNames } from '../reducers/connection-slice'
 import DashboardResultTable from '../partials/dashboard-result-table'
+import ErrorMessage from '../partials/login-error-message'
+
+/**
+ * @param {string} query
+ * @returns {boolean}
+ */
+const isValidQuery = (query) => {
+  return !!query.trim()
+}
 
 function Dashboard() {
   const history = useHistory()
@@ -20,6 +29,7 @@ function Dashboard() {
   const allTableNames = useSelector((state) => state.connection.tableNames)
   // console.log('allTableNames:', allTableNames)
   const [queryResultActiveTab, setQueryResultActiveTab] = useState('table')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const connectionHashKey = useMemo(() => {
     console.log('connectionHashKey useMember triggered.')
@@ -77,7 +87,6 @@ function Dashboard() {
   const performQuery = async () => {
     const targetConnection = allConnections[connectionHashKey]
 
-    // TODO: show spinner
     const params = {
       ...targetConnection,
       query,
@@ -96,6 +105,8 @@ function Dashboard() {
   const onResetClickHandler = (e) => {
     console.log('onResetClickHandler triggered. e:', e)
     setQuery('')
+    setErrorMessage('')
+    setResultObject(undefined)
   }
 
   const onDisconnectClickHandler = () => {
@@ -110,6 +121,13 @@ function Dashboard() {
   const onSubmitHandler = (e) => {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
+    setErrorMessage('')
+
+    if (!isValidQuery(query)) {
+      setErrorMessage('Invalid input query.')
+      return
+    }
+
     performQuery()
   }
 
@@ -210,6 +228,9 @@ function Dashboard() {
                 value={query}
                 placeholder="Type your SQL here..."
               />
+
+              {!!errorMessage && <ErrorMessage message={errorMessage} />}
+
               <div className="text-blue-700 text-right -mx-2 mt-2">
                 <input
                   className="mx-2 py-2 px-4 box-border border border-blue-600 bg-white rounded transition cursor-pointer text-blue-600 hover:bg-opacity-60"

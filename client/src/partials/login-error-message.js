@@ -1,6 +1,6 @@
 import { ExclamationIcon } from '@heroicons/react/outline'
 
-function LoginErrorMessage({ caption = 'Error', message }) {
+function ErrorMessage({ caption = 'Error', message }) {
   return (
     <div className="bg-red-100 text-red-500 p-4 rounded flex items-start my-4">
       <div className="w-6 h-6">
@@ -14,4 +14,4 @@ function LoginErrorMessage({ caption = 'Error', message }) {
   )
 }
 
-export default LoginErrorMessage
+export default ErrorMessage

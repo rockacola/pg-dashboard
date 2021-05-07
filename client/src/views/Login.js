@@ -14,7 +14,7 @@ import { setConnectionInfo } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
 import Spinner from '../partials/spinner'
-import LoginErrorMessage from '../partials/login-error-message'
+import ErrorMessage from '../partials/login-error-message'
 
 function Login() {
   console.log('process.env:', process.env)
@@ -153,7 +153,7 @@ function Login() {
           icon={<DatabaseIcon />}
         />
 
-        {!!errorMessage && <LoginErrorMessage message={errorMessage} />}
+        {!!errorMessage && <ErrorMessage message={errorMessage} />}
 
         <div className="flex justify-center w-full mt-8">
           <button
