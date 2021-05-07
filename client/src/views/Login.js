@@ -108,6 +108,12 @@ function Login() {
     }
   }, [location])
 
+  useEffect(() => {
+    console.log('useEffect on mount')
+
+    // Load stored connection from localstorage to redux store
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   const renderLoading = () => (
     <div className="flex justify-center my-16">
       <Spinner size={16} />
