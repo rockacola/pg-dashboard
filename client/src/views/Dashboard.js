@@ -3,12 +3,20 @@ import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router'
 import { PgServerHandler } from '../handlers/pg-server-handler'
-import DashboardButton from '../partials/dashboard-button'
 import DashboardNavItem from '../partials/dashboard-nav-item'
 import DashboardTabItem from '../partials/dashboard-tab-item'
 import qs from 'query-string'
 import { setTableNames } from '../reducers/connection-slice'
 import DashboardResultTable from '../partials/dashboard-result-table'
+import ErrorMessage from '../partials/login-error-message'
+
+/**
+ * @param {string} query
+ * @returns {boolean}
+ */
+const isValidQuery = (query) => {
+  return !!query.trim()
+}
 
 function Dashboard() {
   const history = useHistory()
@@ -21,6 +29,7 @@ function Dashboard() {
   const allTableNames = useSelector((state) => state.connection.tableNames)
   // console.log('allTableNames:', allTableNames)
   const [queryResultActiveTab, setQueryResultActiveTab] = useState('table')
+  const [errorMessage, setErrorMessage] = useState('')
 
   const connectionHashKey = useMemo(() => {
     console.log('connectionHashKey useMember triggered.')
@@ -64,13 +73,20 @@ function Dashboard() {
 
   useEffect(() => {
     console.log('useEffect on mount')
+
+    // Check if targetted valid connection data is available
+    console.log('connectionHashKey:', connectionHashKey)
+    const targetConnection = allConnections[connectionHashKey]
+    if (!targetConnection) {
+      history.push(`/`)
+    }
+
     updateTableNames()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const performQuery = async () => {
     const targetConnection = allConnections[connectionHashKey]
 
-    // TODO: show spinner
     const params = {
       ...targetConnection,
       query,
@@ -89,6 +105,8 @@ function Dashboard() {
   const onResetClickHandler = (e) => {
     console.log('onResetClickHandler triggered. e:', e)
     setQuery('')
+    setErrorMessage('')
+    setResultObject(undefined)
   }
 
   const onDisconnectClickHandler = () => {
@@ -103,6 +121,13 @@ function Dashboard() {
   const onSubmitHandler = (e) => {
     e.preventDefault()
     console.log('onSubmitHandler triggered. e:', e)
+    setErrorMessage('')
+
+    if (!isValidQuery(query)) {
+      setErrorMessage('Invalid input query.')
+      return
+    }
+
     performQuery()
   }
 
@@ -143,7 +168,7 @@ function Dashboard() {
       return null
     }
     return (
-      <div className="bg-gray-50 p-2 text-xs text-gray-600">
+      <div className="bg-gray-50 rounded p-4 text-xs text-gray-600">
         <pre>
           <code>{JSON.stringify(resultObject, null, 2)}</code>
         </pre>
@@ -152,11 +177,15 @@ function Dashboard() {
   }
 
   return (
-    <div className="h-screen w-full flex overflow-hidden">
-      <nav className="flex flex-col bg-gray-200 w-64 px-12 pt-4 pb-6">
-        <div className="flex flex-row border-b items-center justify-between pb-2">
-          <span className="text-lg font-semibold capitalize">Dashboard</span>
+    <div
+      className="min-h-screen md:h-screen md:w-full flex flex-col md:flex-row md:overflow-hidden bg-no-repeat bg-cover"
+      style={{ backgroundImage: 'url(/images/bg-sample-mountain.jpg)' }}
+    >
+      <nav className="flex flex-col bg-gray-300 bg-opacity-60 md:w-64 px-12 pt-4 pb-6">
+        <div className="text-lg text-gray-800 font-semibold mt-1">
+          Dashboard
         </div>
+
         <div className="mt-2 text-gray-600">
           <DashboardNavItem
             label={targetDatabaseName}
@@ -166,7 +195,7 @@ function Dashboard() {
             {targetTableNames.map((tableName) => (
               <div
                 key={tableName}
-                className="flex items-center my-2 ml-2 text-gray-800 hover:text-gray-600 transition"
+                className="flex items-center my-2 ml-6 text-gray-800 hover:text-gray-600 transition"
               >
                 <div className="w-4 h-4">
                   <TableIcon />
@@ -176,7 +205,7 @@ function Dashboard() {
             ))}
           </div>
         </div>
-        <div className="mt-auto flex items-center text-red-700">
+        <div className="mt-auto text-red-500">
           <DashboardNavItem
             label="Disconnect"
             icon={<LogoutIcon />}
@@ -185,26 +214,35 @@ function Dashboard() {
         </div>
       </nav>
 
-      <main className="flex-1 flex flex-col bg-gray-100 transition duration-500 ease-in-out overflow-y-auto">
+      <main className="flex-1 flex flex-col bg-gray-100 bg-opacity-80 transition duration-500 ease-in-out md:overflow-y-auto">
         <div className="max-w-4xl mx-10 my-2">
           <div>
             <div className="flex">
               <DashboardTabItem label="Query Editor" isActive={true} />
               {/* <DashboardTabItem label="Query History" isActive={false} /> */}
             </div>
-            <form className="mt-2" onSubmit={onSubmitHandler}>
+            <form className="mt-4" onSubmit={onSubmitHandler}>
               <textarea
                 className="container border rounded-lg h-40 p-4"
                 onChange={onQueryChangeHandler}
                 value={query}
+                placeholder="Type your SQL here..."
               />
+
+              {!!errorMessage && <ErrorMessage message={errorMessage} />}
+
               <div className="text-blue-700 text-right -mx-2 mt-2">
-                <DashboardButton
+                <input
+                  className="mx-2 py-2 px-4 box-border border border-blue-600 bg-white rounded transition cursor-pointer text-blue-600 hover:bg-opacity-60"
                   type="reset"
                   value="Reset"
                   onClick={onResetClickHandler}
                 />
-                <DashboardButton type="submit" value="Run" />
+                <input
+                  className="mx-2 py-2 px-4 box-border border border-blue-600 bg-blue-600 hover:bg-blue-500 rounded transition cursor-pointer text-white"
+                  type="submit"
+                  value="Run"
+                />
               </div>
             </form>
           </div>

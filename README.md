@@ -89,4 +89,8 @@ TBA
 
 ## Feedback
 
-Please [open an issue](/issues/new) if you want to leave feedback.
+Please [open an issue](https://github.com/rockacola/pg-dashboard/issues/new) if you want to leave feedback.
+
+## License
+
+Open-source [MIT](https://github.com/rockacola/pg-dashboard/LICENSE.md).

@@ -10,7 +10,7 @@ export class PgServerHandler {
    * @param {string} user
    * @param {string} pass
    * @param {string} db
-   * @returns {Promise<boolean>}
+   * @returns {Promise<void>}
    */
   static async checkConnection({ host, port, username, password, database }) {
     const params = {
@@ -24,11 +24,18 @@ export class PgServerHandler {
       url: SERVER_BASE_URL + '/check',
       query: params,
     })
+
     const res = await axios.get(url)
-    if (!res || !res.data || !res.data.isSuccess) {
-      return false
+    if (!res || !res.data) {
+      throw new Error(`Unable to connect to server: ${host}.`)
     }
-    return res.data.isSuccess
+    if (!res.data.isSuccess) {
+      if (res.data.message) {
+        throw new Error(res.data.message)
+      } else {
+        throw new Error(`Invalid URL request.`)
+      }
+    }
   }
 
   /**
