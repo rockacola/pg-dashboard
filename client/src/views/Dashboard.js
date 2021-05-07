@@ -1,4 +1,9 @@
-import { DatabaseIcon, LogoutIcon, TableIcon } from '@heroicons/react/outline'
+import {
+  DatabaseIcon,
+  EmojiSadIcon,
+  LogoutIcon,
+  TableIcon,
+} from '@heroicons/react/outline'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router'
@@ -6,9 +11,15 @@ import { PgServerHandler } from '../handlers/pg-server-handler'
 import DashboardNavItem from '../partials/dashboard-nav-item'
 import DashboardTabItem from '../partials/dashboard-tab-item'
 import qs from 'query-string'
-import { setTableNames } from '../reducers/connection-slice'
+import {
+  setTableNames,
+  setQuery,
+  removeQuery,
+} from '../reducers/connection-slice'
 import DashboardResultTable from '../partials/dashboard-result-table'
 import ErrorMessage from '../partials/login-error-message'
+import DashboardQueryItem from '../partials/dashboard-query-item'
+import { HashHelper } from '../helpers/hash-helper'
 
 /**
  * @param {string} query
@@ -22,13 +33,13 @@ function Dashboard() {
   const history = useHistory()
   const location = useLocation()
   const dispatch = useDispatch()
-  const [query, setQuery] = useState('')
+  const [queryText, setQueryText] = useState('')
   const [resultObject, setResultObject] = useState(undefined)
   const allConnections = useSelector((state) => state.connection.connections)
-  // console.log('allConnections:', allConnections)
   const allTableNames = useSelector((state) => state.connection.tableNames)
-  // console.log('allTableNames:', allTableNames)
+  const allQueries = useSelector((state) => state.connection.queries)
   const [queryResultActiveTab, setQueryResultActiveTab] = useState('table')
+  const [queryEditorActiveTab, setQueryEditorActiveTab] = useState('editor')
   const [errorMessage, setErrorMessage] = useState('')
 
   const connectionHashKey = useMemo(() => {
@@ -54,6 +65,12 @@ function Dashboard() {
     }
     return tableTableNames
   }, [allTableNames, connectionHashKey])
+
+  const relevantHistoricQueries = useMemo(() => {
+    return Object.values(allQueries).filter(
+      (item) => item.connectionHashKey === connectionHashKey
+    )
+  }, [allQueries, connectionHashKey])
 
   const updateTableNames = async () => {
     console.log('updateTableNames triggered.')
@@ -86,25 +103,41 @@ function Dashboard() {
 
   const performQuery = async () => {
     const targetConnection = allConnections[connectionHashKey]
+    const cleanQuery = queryText.trim()
 
     const params = {
       ...targetConnection,
-      query,
+      query: cleanQuery,
     }
     const res = await PgServerHandler.query(params)
     console.log('res:', res)
 
     setResultObject(res.data)
+
+    // Store as historical query
+    const queryHashKey = HashHelper.getHashByString(cleanQuery)
+    const queryObj = {
+      connectionHashKey,
+      queryHashKey,
+      text: cleanQuery,
+    }
+    console.log('queryHashKey:', queryHashKey)
+    dispatch(
+      setQuery({
+        key: queryHashKey,
+        value: queryObj,
+      })
+    )
   }
 
   const onQueryChangeHandler = (e) => {
     // console.log('onQueryChange triggered. e:', e);
-    setQuery(e.target.value)
+    setQueryText(e.target.value)
   }
 
   const onResetClickHandler = (e) => {
     console.log('onResetClickHandler triggered. e:', e)
-    setQuery('')
+    setQueryText('')
     setErrorMessage('')
     setResultObject(undefined)
   }
@@ -113,8 +146,13 @@ function Dashboard() {
     history.push(`/`)
   }
 
-  const onTabClickHandler = (tabKey) => {
-    console.log('onTabClickHandler triggered. tabKey:', tabKey)
+  const onEditorTabClickHandler = (tabKey) => {
+    console.log('onEditorTabClickHandler triggered. tabKey:', tabKey)
+    setQueryEditorActiveTab(tabKey)
+  }
+
+  const onResultTabClickHandler = (tabKey) => {
+    console.log('onResultTabClickHandler triggered. tabKey:', tabKey)
     setQueryResultActiveTab(tabKey)
   }
 
@@ -123,12 +161,27 @@ function Dashboard() {
     console.log('onSubmitHandler triggered. e:', e)
     setErrorMessage('')
 
-    if (!isValidQuery(query)) {
+    if (!isValidQuery(queryText)) {
       setErrorMessage('Invalid input query.')
       return
     }
 
     performQuery()
+  }
+
+  const onQuerySelectHandler = (key) => {
+    console.log('onQuerySelectHandler triggered. key:', key)
+    const queryItem = allQueries[key]
+
+    setQueryEditorActiveTab('editor')
+    setQueryText(queryItem.text)
+    setErrorMessage('')
+    setResultObject(undefined)
+  }
+
+  const onQueryDeleteHandler = (key) => {
+    console.log('onQueryDeleteHandler triggered. key:', key)
+    dispatch(removeQuery({ key }))
   }
 
   const renderQueryResult = () => {
@@ -139,12 +192,12 @@ function Dashboard() {
           <div className="flex my-2">
             <DashboardTabItem
               label="Table"
-              onClick={() => onTabClickHandler('table')}
+              onClick={() => onResultTabClickHandler('table')}
               isActive={queryResultActiveTab === 'table'}
             />
             <DashboardTabItem
               label="JSON"
-              onClick={() => onTabClickHandler('json')}
+              onClick={() => onResultTabClickHandler('json')}
               isActive={queryResultActiveTab === 'json'}
             />
           </div>
@@ -172,6 +225,62 @@ function Dashboard() {
         <pre>
           <code>{JSON.stringify(resultObject, null, 2)}</code>
         </pre>
+      </div>
+    )
+  }
+
+  const renderQueryEditor = () => (
+    <form onSubmit={onSubmitHandler}>
+      <textarea
+        className="container border rounded-lg h-40 p-4"
+        onChange={onQueryChangeHandler}
+        value={queryText}
+        placeholder="Type your SQL here..."
+      />
+
+      {!!errorMessage && <ErrorMessage message={errorMessage} />}
+
+      <div className="text-blue-700 text-right -mx-2 mt-2">
+        <input
+          className="mx-2 py-2 px-4 box-border border border-blue-600 bg-white rounded transition cursor-pointer text-blue-600 hover:bg-opacity-60"
+          type="reset"
+          value="Reset"
+          onClick={onResetClickHandler}
+        />
+        <input
+          className="mx-2 py-2 px-4 box-border border border-blue-600 bg-blue-600 hover:bg-blue-500 rounded transition cursor-pointer text-white"
+          type="submit"
+          value="Run"
+        />
+      </div>
+    </form>
+  )
+
+  const renderQueryHistory = () => {
+    // console.log('renderQueryHistory triggered.')
+    // console.log('relevantHistoricQueries:', relevantHistoricQueries)
+
+    if (relevantHistoricQueries.length === 0) {
+      return (
+        <div className="px-2 py-4 mb-12 flex items-center text-gray-600">
+          <div>No saved query available.</div>
+          <div className="w-6 h-6 ml-1">
+            <EmojiSadIcon />
+          </div>
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        {relevantHistoricQueries.map((queryItem, index) => (
+          <DashboardQueryItem
+            key={queryItem.queryHashKey}
+            query={queryItem}
+            onSelect={() => onQuerySelectHandler(queryItem.queryHashKey)}
+            onDelete={() => onQueryDeleteHandler(queryItem.queryHashKey)}
+          />
+        ))}
       </div>
     )
   }
@@ -218,33 +327,22 @@ function Dashboard() {
         <div className="max-w-4xl mx-10 my-2">
           <div>
             <div className="flex">
-              <DashboardTabItem label="Query Editor" isActive={true} />
-              {/* <DashboardTabItem label="Query History" isActive={false} /> */}
-            </div>
-            <form className="mt-4" onSubmit={onSubmitHandler}>
-              <textarea
-                className="container border rounded-lg h-40 p-4"
-                onChange={onQueryChangeHandler}
-                value={query}
-                placeholder="Type your SQL here..."
+              <DashboardTabItem
+                label="Query Editor"
+                onClick={() => onEditorTabClickHandler('editor')}
+                isActive={queryEditorActiveTab === 'editor'}
               />
+              <DashboardTabItem
+                label="Query History"
+                onClick={() => onEditorTabClickHandler('history')}
+                isActive={queryEditorActiveTab === 'history'}
+              />
+            </div>
 
-              {!!errorMessage && <ErrorMessage message={errorMessage} />}
-
-              <div className="text-blue-700 text-right -mx-2 mt-2">
-                <input
-                  className="mx-2 py-2 px-4 box-border border border-blue-600 bg-white rounded transition cursor-pointer text-blue-600 hover:bg-opacity-60"
-                  type="reset"
-                  value="Reset"
-                  onClick={onResetClickHandler}
-                />
-                <input
-                  className="mx-2 py-2 px-4 box-border border border-blue-600 bg-blue-600 hover:bg-blue-500 rounded transition cursor-pointer text-white"
-                  type="submit"
-                  value="Run"
-                />
-              </div>
-            </form>
+            <div className="mt-4">
+              {queryEditorActiveTab === 'editor' && renderQueryEditor()}
+              {queryEditorActiveTab === 'history' && renderQueryHistory()}
+            </div>
           </div>
 
           {!!resultObject && renderQueryResult()}

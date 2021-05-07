@@ -6,7 +6,7 @@ const server = http.createServer(app)
 
 if (process.env.DEBUG) {
   process.on('uncaughtException', (reason) => {
-    log('Unhandled rejection. reason:', reason)
+    console.log('Unhandled rejection. reason:', reason)
     process.exit(1)
   })
 }
