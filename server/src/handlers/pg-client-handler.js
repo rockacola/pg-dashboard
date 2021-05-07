@@ -50,6 +50,7 @@ class PgClientHandler {
 
   /**
    * @param {Client} client
+   * @param {string} query
    * @returns {Promise<object>}
    */
   static async query(client, query) {
