@@ -2,6 +2,7 @@ import LoginTextInput from '../partials/login-input-field'
 import {
   ArrowCircleRightIcon,
   DatabaseIcon,
+  EmojiSadIcon,
   InboxIcon,
   LocationMarkerIcon,
   UserIcon,
@@ -9,12 +10,14 @@ import {
 import { useEffect, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setConnectionInfo } from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
 import Spinner from '../partials/spinner'
 import ErrorMessage from '../partials/login-error-message'
+import LoginTabItem from '../partials/login-tab-item'
+import LoginConnectionItem from '../partials/login-connection-item'
 
 function Login() {
   console.log('process.env:', process.env)
@@ -29,6 +32,8 @@ function Login() {
   const [database, setDatabase] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [loginActiveTab, setLoginActiveTab] = useState('new')
+  const allConnections = useSelector((state) => state.connection.connections)
 
   const onInputChangeHandler = (e) => {
     // console.log('onInputChangeHandler triggered. e:', e)
@@ -108,12 +113,51 @@ function Login() {
     }
   }, [location])
 
-  useEffect(() => {
-    console.log('useEffect on mount')
+  const onTabClickHandler = (tabKey) => {
+    console.log('onTabClickHandler triggered. tabKey:', tabKey)
+    setLoginActiveTab(tabKey)
+  }
 
-    // Load stored connection from localstorage to redux store
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const onSavedConnectionClickHandler = (connectionKey) => {
+    console.log(
+      'onSavedConnectionClickHandler triggered. connectionKey:',
+      connectionKey
+    )
+    history.push(`/dashboard?connect=${connectionKey}`)
+  }
 
+  const renderNewConnection = () => (
+    <div>
+      {isLoading && renderLoading()}
+      {!isLoading && renderForm()}
+    </div>
+  )
+
+  const renderSavedConnection = () => {
+    const connectionHashKeys = Object.keys(allConnections)
+    if (connectionHashKeys.length === 0) {
+      return (
+        <div className="px-2 py-4 flex items-center text-gray-600">
+          <div>No saved connections available.</div>
+          <div className="w-6 h-6 ml-1">
+            <EmojiSadIcon />
+          </div>
+        </div>
+      )
+    }
+    return (
+      <div>
+        {connectionHashKeys.map((connectionHashKey) => (
+          <LoginConnectionItem
+            key={connectionHashKey}
+            connectionHashKey={connectionHashKey}
+            connection={allConnections[connectionHashKey]}
+            onClick={() => onSavedConnectionClickHandler(connectionHashKey)}
+          />
+        ))}
+      </div>
+    )
+  }
   const renderLoading = () => (
     <div className="flex justify-center my-16">
       <Spinner size={16} />
@@ -185,8 +229,21 @@ function Login() {
             Connect to PostgreSQL
           </div>
 
-          {isLoading && renderLoading()}
-          {!isLoading && renderForm()}
+          <div className="flex my-2 mt-6">
+            <LoginTabItem
+              label="New"
+              onClick={() => onTabClickHandler('new')}
+              isActive={loginActiveTab === 'new'}
+            />
+            <LoginTabItem
+              label="Saved"
+              onClick={() => onTabClickHandler('saved')}
+              isActive={loginActiveTab === 'saved'}
+            />
+          </div>
+
+          {loginActiveTab === 'new' && renderNewConnection()}
+          {loginActiveTab === 'saved' && renderSavedConnection()}
         </div>
       </div>
     </div>
