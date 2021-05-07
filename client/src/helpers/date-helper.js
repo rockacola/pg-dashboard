@@ -1,6 +1,5 @@
 export class DateHelper {
   /**
-   *
    * @param {string} str
    * @returns {boolean}
    */

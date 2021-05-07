@@ -3,7 +3,7 @@ import { StringHelper } from '../helpers/string-helper'
 
 export class StorageBroker {
   /**
-   * @returns {object}
+   * @returns {Object}
    */
   static getKnownConnections() {
     const strData = LocalstorageHandler.getData('pgd:connections')
@@ -20,7 +20,7 @@ export class StorageBroker {
   }
 
   /**
-   * @returns {object}
+   * @returns {Object}
    */
   static getKnownTableNames() {
     const strData = LocalstorageHandler.getData('pgd:table-names')
@@ -37,7 +37,7 @@ export class StorageBroker {
   }
 
   /**
-   * @returns {object}
+   * @returns {Object}
    */
   static getQueries() {
     const strData = LocalstorageHandler.getData('pgd:queries')
@@ -54,7 +54,7 @@ export class StorageBroker {
   }
 
   /**
-   * @param {object} connections
+   * @param {Object} connections
    */
   static setKnownConnections(connections) {
     const strData = StringHelper.getStableStringify(connections)
@@ -62,7 +62,7 @@ export class StorageBroker {
   }
 
   /**
-   * @param {object} tableNames
+   * @param {Object} tableNames
    */
   static setKnownTableNames(tableNames) {
     const strData = StringHelper.getStableStringify(tableNames)
@@ -70,7 +70,7 @@ export class StorageBroker {
   }
 
   /**
-   * @param {object} queries
+   * @param {Object} queries
    */
   static setQueries(queries) {
     const strData = StringHelper.getStableStringify(queries)

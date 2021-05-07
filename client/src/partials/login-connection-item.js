@@ -1,11 +1,20 @@
 import { LightningBoltIcon, TrashIcon } from '@heroicons/react/outline'
 
+/**
+ * @param {{ connectionHashKey: string, connection: object, onSelect: function():void, onDelete: function():void }}
+ * @returns {JSX.Element}
+ */
 function LoginConnectionItem({
   connectionHashKey,
   connection,
   onSelect,
   onDelete,
 }) {
+  /**
+   * @param {string} key
+   * @param {string} value
+   * @returns {JSX.Element}
+   */
   const renderKeyValue = (key, value) => (
     <div>
       <span className="text-gray-400 inline-block pr-1">{key}</span>

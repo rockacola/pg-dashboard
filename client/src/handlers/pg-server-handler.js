@@ -5,11 +5,7 @@ const SERVER_BASE_URL = process.env.REACT_APP_SERVER_BASE_URL
 
 export class PgServerHandler {
   /**
-   * @param {string} host
-   * @param {string|number} port
-   * @param {string} user
-   * @param {string} pass
-   * @param {string} db
+   * @param {{ host: string, port: string|number, username: string, password: string, database: string }}
    * @returns {Promise<void>}
    */
   static async checkConnection({ host, port, username, password, database }) {
@@ -39,11 +35,7 @@ export class PgServerHandler {
   }
 
   /**
-   * @param {string} host
-   * @param {string|number} port
-   * @param {string} user
-   * @param {string} pass
-   * @param {string} db
+   * @param {{ host: string, port: string|number, username: string, password: string, database: string }}
    * @returns {Promise<string[]>}
    */
   static async getTables({ host, port, username, password, database }) {
@@ -62,6 +54,10 @@ export class PgServerHandler {
     return res.data.data
   }
 
+  /**
+   * @param {{ host: string, port: string|number, username: string, password: string, database: string, query: string }}
+   * @returns {Promise<string[]>}
+   */
   static async query({ host, port, username, password, database, query }) {
     const params = {
       host,

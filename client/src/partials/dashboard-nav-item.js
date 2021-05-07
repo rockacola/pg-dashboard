@@ -1,5 +1,9 @@
 import { BeakerIcon } from '@heroicons/react/solid'
 
+/**
+ * @param {{ label: string, icon: JSX.Element, onClick: function():void }}
+ * @returns {JSX.Element}
+ */
 function DashboardNavItem({ label, icon = <BeakerIcon />, onClick }) {
   const pointerClass = !!onClick ? 'cursor-pointer' : ''
 

@@ -5,7 +5,7 @@ const log = debug('app:PgClientHandler')
 
 class PgClientHandler {
   /**
-   * @param {object} dto
+   * @param {Object} dto
    * @param {string|undefined} dto.user
    * @param {string|undefined} dto.password
    * @param {number|undefined} dto.host

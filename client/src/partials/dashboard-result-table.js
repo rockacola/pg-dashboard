@@ -1,6 +1,10 @@
 import { DateHelper } from '../helpers/date-helper'
 import DateNugget from './date-nugget'
 
+/**
+ * @param {{ data: object }}
+ * @returns {JSX.Element}
+ */
 function DashboardResultTable({ data }) {
   // Validate
   if (!data || !data.rows) {
@@ -12,6 +16,11 @@ function DashboardResultTable({ data }) {
   /** @param {object[]} */
   const dataRows = data.rows
 
+  /**
+   * @param {string} value
+   * @param {index} index
+   * @returns {JSX.Element}
+   */
   const renderHeadCell = (value, index) => (
     <th
       key={index}
@@ -21,6 +30,12 @@ function DashboardResultTable({ data }) {
     </th>
   )
 
+  /**
+   * @param {any} value
+   * @param {index} rIndex
+   * @param {index} cIndex
+   * @returns {JSX.Element}
+   */
   const renderBodyCell = (value, rIndex, cIndex) => {
     let val = value
     if (typeof value === 'boolean') {

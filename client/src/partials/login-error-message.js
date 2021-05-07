@@ -1,5 +1,9 @@
 import { ExclamationIcon } from '@heroicons/react/outline'
 
+/**
+ * @param {{ caption: string, message: string }}
+ * @returns {JSX.Element}
+ */
 function ErrorMessage({ caption = 'Error', message }) {
   return (
     <div className="bg-red-100 text-red-500 p-4 rounded flex items-start my-4">
