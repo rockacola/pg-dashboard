@@ -11,7 +11,10 @@ import { useEffect, useState } from 'react'
 import { PgServerHandler } from '../handlers/pg-server-handler'
 import qs from 'query-string'
 import { useDispatch, useSelector } from 'react-redux'
-import { setConnectionInfo } from '../reducers/connection-slice'
+import {
+  setConnectionInfo,
+  removeConnectionInfo,
+} from '../reducers/connection-slice'
 import { HashHelper } from '../helpers/hash-helper'
 import { useHistory, useLocation } from 'react-router-dom'
 import Spinner from '../partials/spinner'
@@ -118,12 +121,25 @@ function Login() {
     setLoginActiveTab(tabKey)
   }
 
-  const onSavedConnectionClickHandler = (connectionKey) => {
+  const onConnectionSelectHandler = (connectionKey) => {
     console.log(
-      'onSavedConnectionClickHandler triggered. connectionKey:',
+      'onConnectionSelectHandler triggered. connectionKey:',
       connectionKey
     )
     history.push(`/dashboard?connect=${connectionKey}`)
+  }
+
+  const onConnectionDeleteHandler = (connectionKey) => {
+    console.log(
+      'onConnectionDeleteHandler triggered. connectionKey:',
+      connectionKey
+    )
+
+    dispatch(
+      removeConnectionInfo({
+        key: connectionKey,
+      })
+    )
   }
 
   const renderNewConnection = () => (
@@ -152,7 +168,8 @@ function Login() {
             key={connectionHashKey}
             connectionHashKey={connectionHashKey}
             connection={allConnections[connectionHashKey]}
-            onClick={() => onSavedConnectionClickHandler(connectionHashKey)}
+            onSelect={() => onConnectionSelectHandler(connectionHashKey)}
+            onDelete={() => onConnectionDeleteHandler(connectionHashKey)}
           />
         ))}
       </div>

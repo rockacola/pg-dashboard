@@ -17,6 +17,12 @@ export const connectionSlice = createSlice({
       StorageBroker.setKnownConnections(state.connections)
     },
 
+    removeConnectionInfo: (state, action) => {
+      const key = action.payload.key
+      delete state.connections[key]
+      StorageBroker.setKnownConnections(state.connections)
+    },
+
     setTableNames: (state, action) => {
       const key = action.payload.key
       const value = action.payload.value
@@ -26,5 +32,9 @@ export const connectionSlice = createSlice({
   },
 })
 
-export const { setConnectionInfo, setTableNames } = connectionSlice.actions
+export const {
+  setConnectionInfo,
+  removeConnectionInfo,
+  setTableNames,
+} = connectionSlice.actions
 export default connectionSlice.reducer
