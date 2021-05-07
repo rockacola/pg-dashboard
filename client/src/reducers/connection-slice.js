@@ -29,7 +29,7 @@ export const connectionSlice = createSlice({
       const key = action.payload.key
       const value = action.payload.value
       state.queries[key] = value
-      StorageBroker.setQuries(state.queries)
+      StorageBroker.setQueries(state.queries)
     },
 
     removeConnectionInfo: (state, action) => {
@@ -41,7 +41,7 @@ export const connectionSlice = createSlice({
     removeQuery: (state, action) => {
       const key = action.payload.key
       delete state.queries[key]
-      StorageBroker.setQuries(state.queries)
+      StorageBroker.setQueries(state.queries)
     },
   },
 })

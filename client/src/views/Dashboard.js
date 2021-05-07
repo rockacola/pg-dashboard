@@ -66,6 +66,12 @@ function Dashboard() {
     return tableTableNames
   }, [allTableNames, connectionHashKey])
 
+  const relevantHistoricQueries = useMemo(() => {
+    return Object.values(allQueries).filter(
+      (item) => item.connectionHashKey === connectionHashKey
+    )
+  }, [allQueries, connectionHashKey])
+
   const updateTableNames = async () => {
     console.log('updateTableNames triggered.')
     const targetConnection = allConnections[connectionHashKey]
@@ -251,11 +257,10 @@ function Dashboard() {
   )
 
   const renderQueryHistory = () => {
-    const relevantQuries = Object.values(allQueries).filter(
-      (item) => item.connectionHashKey === connectionHashKey
-    )
+    // console.log('renderQueryHistory triggered.')
+    // console.log('relevantHistoricQueries:', relevantHistoricQueries)
 
-    if (relevantQuries.length === 0) {
+    if (relevantHistoricQueries.length === 0) {
       return (
         <div className="px-2 py-4 mb-12 flex items-center text-gray-600">
           <div>No saved query available.</div>
@@ -268,7 +273,7 @@ function Dashboard() {
 
     return (
       <div>
-        {relevantQuries.map((queryItem, index) => (
+        {relevantHistoricQueries.map((queryItem, index) => (
           <DashboardQueryItem
             key={queryItem.queryHashKey}
             query={queryItem}

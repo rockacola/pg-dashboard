@@ -72,8 +72,8 @@ export class StorageBroker {
   /**
    * @param {object} queries
    */
-  static setQuries(queries) {
+  static setQueries(queries) {
     const strData = StringHelper.getStableStringify(queries)
-    LocalstorageHandler.setData('pgd:quries', strData)
+    LocalstorageHandler.setData('pgd:queries', strData)
   }
 }
