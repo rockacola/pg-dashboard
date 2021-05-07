@@ -1,3 +1,6 @@
+import { DateHelper } from '../helpers/date-helper'
+import DateNugget from './date-nugget'
+
 function DashboardResultTable({ data }) {
   // Validate
   if (!data || !data.rows) {
@@ -19,9 +22,12 @@ function DashboardResultTable({ data }) {
   )
 
   const renderBodyCell = (value, rIndex, cIndex) => {
-    let strVal = value
+    let val = value
     if (typeof value === 'boolean') {
-      strVal = value.toString()
+      val = value.toString()
+    }
+    if (DateHelper.isIsoDate(val)) {
+      val = <DateNugget value={val} />
     }
 
     return (
@@ -29,7 +35,7 @@ function DashboardResultTable({ data }) {
         key={`${rIndex}_${cIndex}`}
         className="px-6 py-2 whitespace-no-wrap border-b text-gray-800 border-gray-100 text-sm leading-5"
       >
-        {strVal}
+        {val}
       </td>
     )
   }
